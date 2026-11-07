@@ -2,6 +2,28 @@
   "name": "grantly",
   "private": true,
   "version": "0.1.0",
+  "description": "Helps students in India turn scholarship opportunities into usable education funding: eligibility, document readiness, application tracking and the funding gap.",
+  "author": "Sathish Babu",
+  "license": "MIT",
+  "homepage": "https://grantly-scholar.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SathishAchilles/grantly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SathishAchilles/grantly/issues"
+  },
+  "keywords": [
+    "scholarships",
+    "education-funding",
+    "india",
+    "react",
+    "typescript",
+    "vite",
+    "zustand",
+    "tailwindcss",
+    "accessibility"
+  ],
   "type": "module",
   "engines": {
     "node": "22.x"
