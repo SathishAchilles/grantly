@@ -1,5 +1,5 @@
-import { applies } from './eligibility'
-import type { ApplicantType, Application, Doc, EvidenceRequirement, Scheme, Student } from './types'
+import { applicantTypeFor, applies } from './eligibility'
+import type { Application, Doc, EvidenceRequirement, Scheme, Student } from './types'
 
 /** How well the student's documents cover one requirement. */
 export type ReadinessResult = 'satisfied' | 'alternative' | 'not-satisfied' | 'missing' | 'needs-confirmation'
@@ -124,28 +124,6 @@ function evaluateRequirement(
 }
 
 /**
- * Works out whether the student is a fresh or renewal applicant to one scheme.
- *
- * @param schemeId - The scheme being checked.
- * @param studentId - The student being checked.
- * @param applications - Every application on record. When omitted the student counts as fresh.
- * @returns "renewal" only when the student has a renewal application to this scheme, otherwise "fresh".
- */
-export function applicantTypeFor(
-  schemeId: string,
-  studentId: string,
-  applications: readonly Application[] = [],
-): ApplicantType {
-  const renewing = applications.some(
-    (application) =>
-      application.schemeId === schemeId &&
-      application.studentId === studentId &&
-      application.applicantType === 'renewal',
-  )
-  return renewing ? 'renewal' : 'fresh'
-}
-
-/**
  * Checks the student's documents against every evidence requirement of the scheme for their applicant type.
  * Conditional requirements that do not apply are kept in the list, marked "not-applicable", so they can be shown.
  *
@@ -159,7 +137,7 @@ export function evaluateReadiness(
   student: Student,
   applications: readonly Application[] = [],
 ): RequirementReadiness[] {
-  const applicantType = applicantTypeFor(scheme.id, student.id, applications)
+  const applicantType = applicantTypeFor(scheme, student, applications)
   return scheme.evidence
     .filter((requirement) => applies(requirement.appliesTo, applicantType))
     .map((requirement): RequirementReadiness => {

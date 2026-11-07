@@ -6,7 +6,8 @@ import { SourceLink } from '@/components/SourceLink'
 import { StatusBadge } from '@/components/StatusBadge'
 import { StudentOnly } from '@/components/StudentOnly'
 import { schemes } from '@/data/schemes'
-import { applicantTypeFor, evaluateReadiness, summarizeReadiness } from '@/domain/readiness'
+import { applicantTypeFor } from '@/domain/eligibility'
+import { evaluateReadiness, summarizeReadiness } from '@/domain/readiness'
 import type { Application, Scheme, Student } from '@/domain/types'
 import { useGrantlyStore } from '@/store/useGrantlyStore'
 
@@ -21,7 +22,7 @@ function ProgrammeReadiness({
 }) {
   const results = evaluateReadiness(scheme, student, applications)
   const { required, ready, unresolved, skipped } = summarizeReadiness(results)
-  const applicantType = applicantTypeFor(scheme.id, student.id, applications)
+  const applicantType = applicantTypeFor(scheme, student, applications)
   const headingId = `ready-${scheme.id}`
   return (
     <Card aria-labelledby={headingId}>
@@ -76,8 +77,7 @@ function Readiness({ student }: { student: Student }) {
   const applications = useGrantlyStore((state) => state.applications)
   const [searchParams] = useSearchParams()
   const open = schemes.filter(
-    (scheme) =>
-      scheme.openFor.includes(applicantTypeFor(scheme.id, student.id, applications)) && scheme.evidence.length > 0,
+    (scheme) => scheme.openFor.includes(applicantTypeFor(scheme, student, applications)) && scheme.evidence.length > 0,
   )
   const chosen = open.find((scheme) => scheme.id === searchParams.get('scheme'))
   const shown = chosen ? [chosen] : open

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { applications } from '@/data/cases'
 import { ffe, hdfcEcss, pmUspCsss } from '@/data/schemes'
 import { freshStudent, renewalStudent } from '@/test/fixtures'
-import { applicantTypeFor, evaluateReadiness, summarizeReadiness } from './readiness'
+import { evaluateReadiness, summarizeReadiness } from './readiness'
 import type { Doc } from './types'
 
 const byId = (results: ReturnType<typeof evaluateReadiness>, id: string) =>
@@ -118,13 +118,6 @@ describe('evaluateReadiness', () => {
     student.documents = [{ ...enrolment2026, type: 'bank-passbook', academicYear: undefined }]
 
     expect(byId(evaluateReadiness(hdfcEcss, student), 'bank-details')?.result).toBe('satisfied')
-  })
-
-  it('derives the applicant type per scheme from the student applications', () => {
-    expect(applicantTypeFor('pm-usp-csss', 'meera', applications)).toBe('renewal')
-    expect(applicantTypeFor('hdfc-ecss', 'meera', applications)).toBe('fresh')
-    expect(applicantTypeFor('pm-usp-csss', 'arjun', applications)).toBe('fresh')
-    expect(applicantTypeFor('pm-usp-csss', 'meera')).toBe('fresh')
   })
 
   it('ignores the student-level applicant type when choosing renewal evidence', () => {

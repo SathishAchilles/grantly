@@ -22,14 +22,14 @@ describe('Readiness page scope and conditions', () => {
     renderRoute('/readiness')
 
     const ffe = await screen.findByRole('region', { name: 'FFE' })
-    const skipped = within(ffe)
+    const matching = within(ffe)
       .getAllByRole('listitem')
-      .filter((item) => item.textContent?.includes('Income certificate or ITR'))
-    expect(skipped).toHaveLength(1)
-    expect(within(skipped[0] as HTMLElement).getByText('Only if this applies to you')).toBeInTheDocument()
-    expect(
-      within(skipped[0] as HTMLElement).getByText('This does not apply to you, so it is not counted.'),
-    ).toBeVisible()
+      .filter((item) => within(item).queryByText(/Income certificate or ITR/) !== null)
+    expect(matching).toHaveLength(1)
+    const [skipped] = matching
+    if (!skipped) throw new Error('Income certificate requirement not found')
+    expect(within(skipped).getByText('Only if this applies to you')).toBeInTheDocument()
+    expect(within(skipped).getByText('This does not apply to you, so it is not counted.')).toBeVisible()
     expect(within(ffe).getByText('1 of 3 required documents ready')).toBeInTheDocument()
   })
 
