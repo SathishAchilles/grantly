@@ -69,10 +69,10 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
   return (
     <section aria-labelledby="caseworker-heading" className="rounded-card border border-forest bg-surface p-6">
       <h2 id="caseworker-heading" className="text-title font-semibold">
-        Demo caseworker
+        Caseworker
       </h2>
       <p className="mt-1 text-small font-medium text-muted">
-        Scripted demo: it matches a few known notice types using fixed rules. It is not AI.
+        Reads a notice from a portal, email or letter and turns it into one task, using fixed rules.
       </p>
 
       <form onSubmit={read} className="mt-4 space-y-4">

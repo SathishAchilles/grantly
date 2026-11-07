@@ -123,7 +123,7 @@ export function planResponse(text: string, student: Student, application: Applic
     case 'unrecognised':
       return {
         kind: interpretation.kind,
-        steps: [read, 'This does not match any notice type this demo knows.'],
+        steps: [read, 'This does not match any notice type I recognise.'],
         summary: 'I will not guess. Tell me what the notice asks for, or contact the scheme helpdesk.',
         action: null,
       }

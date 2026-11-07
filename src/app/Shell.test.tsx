@@ -100,20 +100,20 @@ describe('Shell', () => {
     expect(screen.getByRole('combobox', { name: 'Viewing as' })).toHaveFocus()
   })
 
-  it('resets the demo after confirmation, and can be cancelled', async () => {
+  it('starts over after confirmation, and can be cancelled', async () => {
     const { user } = renderRoute('/')
     await screen.findByRole('heading', { level: 1 })
     useGrantlyStore.getState().setPerson('arjun')
 
-    await user.click(screen.getByRole('button', { name: 'Reset demo data' }))
-    expect(screen.getByText('Reset all demo progress?')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Start over' }))
+    expect(screen.getByText('Clear all progress and start over?')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(useGrantlyStore.getState().activePersonId).toBe('arjun')
 
-    await user.click(screen.getByRole('button', { name: 'Reset demo data' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, reset' }))
+    await user.click(screen.getByRole('button', { name: 'Start over' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, start over' }))
 
-    expect(screen.getByRole('status')).toHaveTextContent('Demo data reset.')
+    expect(within(screen.getByRole('contentinfo')).getByRole('status')).toHaveTextContent('Progress cleared.')
     expect(useGrantlyStore.getState().activePersonId).toBe('meera')
   })
 })

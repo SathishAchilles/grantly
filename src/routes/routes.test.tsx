@@ -197,17 +197,17 @@ describe('Applications and the caseworker', () => {
     expect(within(card).getByText(correctionNotice)).toBeInTheDocument()
   })
 
-  it('labels the caseworker as a scripted demo, not AI', async () => {
+  it('describes the caseworker plainly, as using fixed rules', async () => {
     renderRoute('/applications')
 
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
-    expect(within(caseworker).getByText(/Scripted demo: .* It is not AI\./)).toBeInTheDocument()
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
+    expect(within(caseworker).getByText('Reads a notice from a portal, email or letter and turns it into one task, using fixed rules.')).toBeInTheDocument()
     expect(within(caseworker).getByRole('button', { name: 'Read notice' })).toBeDisabled()
   })
 
   it('turns the enrolment notice into a college task only after Meera confirms', async () => {
     const { user } = renderRoute('/applications')
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
     await user.click(within(caseworker).getByRole('button', { name: 'Returned: enrolment evidence' }))
     expect(within(caseworker).getByRole('textbox', { name: 'Notice text' })).toHaveValue(correctionNotice)
@@ -225,7 +225,7 @@ describe('Applications and the caseworker', () => {
 
   it('does not guess at an unrecognised notice, and shows text as plain text', async () => {
     const { user } = renderRoute('/applications')
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
     await user.type(within(caseworker).getByRole('textbox', { name: 'Notice text' }), '<img src=x onerror=alert(1)> please call us')
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
@@ -237,7 +237,7 @@ describe('Applications and the caseworker', () => {
 
   it('explains an Aadhaar payment failure with its source, and can be cancelled', async () => {
     const { user } = renderRoute('/applications')
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
     await user.click(within(caseworker).getByRole('button', { name: 'Payment failed: Aadhaar' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
@@ -251,7 +251,7 @@ describe('Applications and the caseworker', () => {
   it("works on Arjun's chosen application", async () => {
     as('arjun')
     const { user } = renderRoute('/applications')
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
     await user.selectOptions(within(caseworker).getByRole('combobox', { name: 'Application' }), 'FFE, 2026-27')
     await user.click(within(caseworker).getByRole('button', { name: 'Incomplete: missing document' }))
@@ -265,7 +265,7 @@ describe('Applications and the caseworker', () => {
   it('reveals steps one at a time when motion is allowed', async () => {
     vi.stubGlobal('matchMedia', () => ({ matches: false }))
     const { user } = renderRoute('/applications')
-    const caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
     await user.click(within(caseworker).getByRole('button', { name: 'Returned: enrolment evidence' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
@@ -375,7 +375,7 @@ describe('College desk', () => {
 describe('Full correction journey', () => {
   it('Meera asks, Priya issues the letter, and Meera resubmits with it', async () => {
     const { user } = renderRoute('/applications')
-    let caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    let caseworker = await screen.findByRole('region', { name: 'Caseworker' })
     await user.click(within(caseworker).getByRole('button', { name: 'Returned: enrolment evidence' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Confirm' }))
@@ -392,7 +392,7 @@ describe('Full correction journey', () => {
     expect(letter).toHaveTextContent('Confirmed by college staff')
 
     await user.click(screen.getByRole('link', { name: 'Applications' }))
-    caseworker = await screen.findByRole('region', { name: 'Demo caseworker' })
+    caseworker = await screen.findByRole('region', { name: 'Caseworker' })
     await user.click(within(caseworker).getByRole('button', { name: 'Returned: enrolment evidence' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
     expect(within(caseworker).getByText(/Attach your 2026-27 enrolment letter/)).toBeInTheDocument()

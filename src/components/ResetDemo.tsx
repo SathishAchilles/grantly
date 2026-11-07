@@ -10,7 +10,7 @@ export function ResetDemo() {
   if (confirming) {
     return (
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-small">Reset all demo progress?</span>
+        <span className="text-small">Clear all progress and start over?</span>
         <Button
           variant="secondary"
           onClick={() => {
@@ -19,7 +19,7 @@ export function ResetDemo() {
             setDone(true)
           }}
         >
-          Yes, reset
+          Yes, start over
         </Button>
         <Button variant="secondary" onClick={() => setConfirming(false)}>
           Cancel
@@ -37,10 +37,10 @@ export function ResetDemo() {
           setConfirming(true)
         }}
       >
-        Reset demo data
+        Start over
       </Button>
       <p role="status" className="text-small text-muted">
-        {done ? 'Demo data reset.' : ''}
+        {done ? 'Progress cleared.' : ''}
       </p>
     </div>
   )
