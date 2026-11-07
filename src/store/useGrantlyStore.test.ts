@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { correctionNotice } from '../data/cases'
-import { mailbox } from '../data/emails'
-import { planResponse } from '../domain/caseworker'
-import { readEmail } from '../domain/email'
-import { required, TODAY } from '../test/fixtures'
-import { completeTask, useGrantlyStore } from './useGrantlyStore'
+import { correctionNotice } from '@/data/cases'
+import { mailbox } from '@/data/emails'
+import { planResponse } from '@/domain/caseworker'
+import { readEmail } from '@/domain/email'
+import { required, TODAY } from '@/test/fixtures'
+import { completeTask, isGrantlyData, useGrantlyStore } from './useGrantlyStore'
 
 const state = () => useGrantlyStore.getState()
 const meera = () => required(state().students.find((student) => student.id === 'meera'), 'Meera')
@@ -163,5 +163,40 @@ describe('useGrantlyStore', () => {
     expect(options.name).toBe('grantly')
     expect(options.version).toBe(3)
     expect(Object.keys(partialize(state()))).toEqual(['activePersonId', 'students', 'applications', 'tasks', 'processedEmailIds'])
+  })
+})
+
+describe('loading saved progress', () => {
+  const saved = () => {
+    const { activePersonId, students, applications, tasks, processedEmailIds } = useGrantlyStore.getState()
+    return structuredClone({ activePersonId, students, applications, tasks, processedEmailIds })
+  }
+
+  it('accepts progress saved by this version', () => {
+    expect(isGrantlyData(saved())).toBe(true)
+  })
+
+  it('rejects edited, corrupted or unknown data', () => {
+    const unknownScheme = saved()
+    required(unknownScheme.applications[0], 'application').schemeId = 'not-a-scheme'
+
+    expect(isGrantlyData(null)).toBe(false)
+    expect(isGrantlyData('grantly')).toBe(false)
+    expect(isGrantlyData({ ...saved(), activePersonId: 'someone-else' })).toBe(false)
+    expect(isGrantlyData({ ...saved(), students: null })).toBe(false)
+    expect(isGrantlyData({ ...saved(), tasks: [{ id: 1 }] })).toBe(false)
+    expect(isGrantlyData({ ...saved(), processedEmailIds: [42] })).toBe(false)
+    expect(isGrantlyData(unknownScheme)).toBe(false)
+  })
+
+  it('keeps the starting state when saved data is invalid, and discards older versions', () => {
+    const options = useGrantlyStore.persist.getOptions()
+    const merge = required(options.merge, 'merge')
+    const migrate = required(options.migrate, 'migrate')
+    const current = useGrantlyStore.getState()
+
+    expect(merge({ students: 'broken' }, current)).toBe(current)
+    expect(merge({ ...saved(), activePersonId: 'arjun' }, current).activePersonId).toBe('arjun')
+    expect(migrate({ anything: true }, 2)).toMatchObject({ activePersonId: 'meera', processedEmailIds: [] })
   })
 })

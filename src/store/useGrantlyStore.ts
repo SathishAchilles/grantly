@@ -1,10 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { applications as initialApplications, tasks as initialTasks } from '../data/cases'
-import { arjun, meera } from '../data/people'
-import type { ProposedAction } from '../domain/caseworker'
-import type { EmailChange, EmailOutcome } from '../domain/email'
-import type { Application, StatusBasis, Student, Task, TaskStatus } from '../domain/types'
+import { applications as initialApplications, tasks as initialTasks } from '@/data/cases'
+import { arjun, meera, people } from '@/data/people'
+import { schemes } from '@/data/schemes'
+import type { ProposedAction } from '@/domain/caseworker'
+import type { EmailChange, EmailOutcome } from '@/domain/email'
+import type { Application, StatusBasis, Student, Task, TaskStatus } from '@/domain/types'
 
 export interface GrantlyData {
   activePersonId: string
@@ -34,6 +35,38 @@ const initialData = (): GrantlyData =>
     tasks: initialTasks,
     processedEmailIds: [],
   })
+
+const isObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
+
+const isArrayOf = (value: unknown, check: (item: unknown) => boolean): boolean => Array.isArray(value) && value.every(check)
+
+const knownSchemeIds = new Set(schemes.map((scheme) => scheme.id))
+const knownPersonIds = new Set(people.map((person) => person.id))
+
+/**
+ * Checks that saved progress has the shape the app expects before it is loaded.
+ * Edited, corrupted or outdated `localStorage` data fails the check and the starting state is used instead.
+ */
+export function isGrantlyData(value: unknown): value is GrantlyData {
+  if (!isObject(value)) return false
+  return (
+    typeof value.activePersonId === 'string' &&
+    knownPersonIds.has(value.activePersonId) &&
+    isArrayOf(value.students, (student) => isObject(student) && typeof student.id === 'string') &&
+    isArrayOf(
+      value.applications,
+      (application) =>
+        isObject(application) &&
+        typeof application.id === 'string' &&
+        typeof application.schemeId === 'string' &&
+        knownSchemeIds.has(application.schemeId) &&
+        Array.isArray(application.history) &&
+        isObject(application.tracks),
+    ) &&
+    isArrayOf(value.tasks, (task) => isObject(task) && typeof task.id === 'string' && typeof task.applicationId === 'string') &&
+    isArrayOf(value.processedEmailIds, (id) => typeof id === 'string')
+  )
+}
 
 const withApplication = (records: Records, id: string, update: (application: Application) => Application): Records => ({
   ...records,
@@ -164,6 +197,9 @@ export const useGrantlyStore = create<GrantlyState>()(
     {
       name: 'grantly',
       version: 3,
+      // Older versions are discarded rather than migrated; the starting state is used instead.
+      migrate: () => initialData(),
+      merge: (persisted, current) => (isGrantlyData(persisted) ? { ...current, ...persisted } : current),
       partialize: ({ activePersonId, students, applications, tasks, processedEmailIds }) => ({
         activePersonId,
         students,
