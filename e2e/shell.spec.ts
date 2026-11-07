@@ -2,13 +2,13 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 const areas = [
-  { path: '/', label: 'Today' },
-  { path: '/discover', label: 'Discover' },
-  { path: '/compare', label: 'Compare' },
-  { path: '/documents', label: 'Documents' },
+  { path: '/', label: 'My funding plan' },
+  { path: '/opportunities', label: 'Opportunities' },
+  { path: '/readiness', label: 'Readiness' },
   { path: '/applications', label: 'Applications' },
-  { path: '/awards', label: 'Awards' },
-  { path: '/renewals', label: 'Renewals' },
+  { path: '/funding', label: 'Funding and renewal' },
+  { path: '/college', label: 'College desk' },
+  { path: '/combinations', label: 'Combinations' },
 ]
 
 for (const { path, label } of areas) {
@@ -30,16 +30,27 @@ for (const { path, label } of areas) {
   })
 }
 
-test('refreshing a deep link keeps the page', async ({ page }) => {
+test('the coordinator view of College desk has no axe violations', async ({ page }) => {
+  await page.goto('/college')
+  await page.getByRole('combobox', { name: 'Viewing as' }).selectOption({ label: 'Priya Nair, college coordinator' })
+  await expect(page.getByRole('article', { name: 'Issue a bonafide certificate' })).toBeVisible()
+
+  const results = await new AxeBuilder({ page }).analyze()
+  expect(results.violations).toEqual([])
+})
+
+test('refreshing a deep link keeps the page and the chosen person', async ({ page }) => {
   await page.goto('/applications')
+  await page.getByRole('combobox', { name: 'Viewing as' }).selectOption({ label: 'Arjun Kumar, student' })
   await page.reload()
 
   await expect(page.getByRole('heading', { level: 1, name: 'Applications' })).toBeVisible()
+  await expect(page.getByRole('region', { name: 'FFE, 2026-27' })).toBeVisible()
 })
 
 test('the skip link moves keyboard focus to main', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1, name: 'Today' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'My funding plan' })).toBeVisible()
 
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
@@ -50,10 +61,10 @@ test('the skip link moves keyboard focus to main', async ({ page }) => {
 
 test('navigating moves focus to main and changes the URL', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Renewals' }).click()
+  await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Funding and renewal' }).click()
 
-  await expect(page).toHaveURL(/\/renewals$/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Renewals' })).toBeVisible()
+  await expect(page).toHaveURL(/\/funding$/)
+  await expect(page.getByRole('heading', { level: 1, name: 'Funding and renewal' })).toBeVisible()
   await expect(page.getByRole('main')).toBeFocused()
 })
 
@@ -61,8 +72,8 @@ test('an unknown address shows the not-found page', async ({ page }) => {
   await page.goto('/no-such-page')
 
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible()
-  await page.getByRole('link', { name: 'Go to Today' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Today' })).toBeVisible()
+  await page.getByRole('link', { name: 'Go to My funding plan' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'My funding plan' })).toBeVisible()
 })
 
 test.describe('reduced motion', () => {
@@ -72,7 +83,7 @@ test.describe('reduced motion', () => {
     await page.goto('/')
     const duration = await page
       .getByRole('navigation', { name: 'Primary' })
-      .getByRole('link', { name: 'Today' })
+      .getByRole('link', { name: 'My funding plan' })
       .evaluate((link) => getComputedStyle(link).transitionDuration)
 
     expect(parseFloat(duration)).toBeLessThan(0.001)
