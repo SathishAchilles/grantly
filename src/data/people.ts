@@ -66,7 +66,9 @@ export const arjun: Student = {
   otherSchemesAvailed: [],
   costs: 120_000,
   familyContribution: 40_000,
-  support: [],
+  support: [
+    { id: 'arjun-fee-waiver', label: 'Deccan Institute merit fee waiver', amount: 20_000, kind: 'fee-reduction', state: 'pending' },
+  ],
   documents: [
     { id: 'arjun-income', type: 'income-certificate', label: 'Income certificate', academicYear: '2026-27', issuer: 'Circle Officer, Bihar', basis: 'evidence' },
     { id: 'arjun-admission', type: 'admission-letter', label: 'Admission letter', academicYear: '2026-27', issuer: 'Deccan Institute of Technology', basis: 'evidence' },

@@ -38,16 +38,25 @@ describe('My funding plan', () => {
     expect(within(actions).queryByText(/Your part is done/)).not.toBeInTheDocument()
   })
 
-  it("shows Arjun has no support yet and that his task waits on his family", async () => {
+  it("keeps Arjun's pending fee waiver out of his gap, and shows his task waits on his family", async () => {
     as('arjun')
     renderRoute('/')
 
     const position = await screen.findByRole('region', { name: 'Your funding position, 2026-27' })
     expect(within(position).getByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹80,000')
-    expect(within(position).getByText('No scholarship support yet. See Opportunities.')).toBeInTheDocument()
+    expect(within(position).getByText(/Deccan Institute merit fee waiver/)).toHaveTextContent('(Reduces your college fee; not cash)')
     const actions = region('Next actions')
     expect(within(actions).getByText('Your part is done. Waiting on: Family.')).toBeInTheDocument()
     expect(within(actions).getByText('No published deadline')).toBeInTheDocument()
+  })
+
+  it('says when there is no support at all', async () => {
+    const arjun = required(store().students[1], 'Arjun')
+    useGrantlyStore.setState({ students: [required(store().students[0], 'Meera'), { ...arjun, support: [] }] })
+    as('arjun')
+    renderRoute('/')
+
+    expect(await screen.findByText('No scholarship support yet. See Opportunities.')).toBeInTheDocument()
   })
 
   it('counts confirmed support and describes a fee reduction as not cash', async () => {
