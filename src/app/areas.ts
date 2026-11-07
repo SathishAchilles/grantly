@@ -1,11 +1,11 @@
 import {
-  Award,
-  CalendarSync,
+  Banknote,
+  Building2,
   ClipboardList,
-  FolderOpen,
-  House,
-  Scale,
+  FileCheck2,
+  Layers,
   Search,
+  Wallet,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -16,11 +16,11 @@ export interface Area {
 }
 
 export const areas: Area[] = [
-  { path: '/', label: 'Today', icon: House },
-  { path: '/discover', label: 'Discover', icon: Search },
-  { path: '/compare', label: 'Compare', icon: Scale },
-  { path: '/documents', label: 'Documents', icon: FolderOpen },
+  { path: '/', label: 'My funding plan', icon: Wallet },
+  { path: '/opportunities', label: 'Opportunities', icon: Search },
+  { path: '/readiness', label: 'Readiness', icon: FileCheck2 },
   { path: '/applications', label: 'Applications', icon: ClipboardList },
-  { path: '/awards', label: 'Awards', icon: Award },
-  { path: '/renewals', label: 'Renewals', icon: CalendarSync },
+  { path: '/funding', label: 'Funding and renewal', icon: Banknote },
+  { path: '/college', label: 'College desk', icon: Building2 },
+  { path: '/combinations', label: 'Combinations', icon: Layers },
 ]

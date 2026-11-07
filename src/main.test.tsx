@@ -15,7 +15,7 @@ describe('main', () => {
       await import('./main')
     })
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Today' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'My funding plan' })).toBeInTheDocument()
   })
 
   it('fails clearly when #root is missing', async () => {

@@ -1,5 +1,6 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { useGrantlyStore } from '../store/useGrantlyStore'
 import { axeViolations, renderRoute } from '../test/render'
 import { areas } from './areas'
 
@@ -9,7 +10,7 @@ describe('Shell', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: label })).toBeInTheDocument()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
-    expect(document.title).toBe(`${label} | GRANTLY`)
+    await waitFor(() => expect(document.title).toBe(`${label} | GRANTLY`))
 
     const nav = screen.getByRole('navigation', { name: 'Primary' })
     expect(within(nav).getByRole('link', { name: label })).toHaveAttribute('aria-current', 'page')
@@ -23,7 +24,7 @@ describe('Shell', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
-    expect(screen.getByRole('contentinfo')).toBeInTheDocument()
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('Scheme rules, amounts and deadlines link to their official sources.')
   })
 
   it('makes the skip link the first focusable element, pointing at main', async () => {
@@ -47,42 +48,72 @@ describe('Shell', () => {
 
   it('navigates without reloading and moves focus to main', async () => {
     const { user, router } = renderRoute('/')
-    await screen.findByRole('heading', { level: 1, name: 'Today' })
+    await screen.findByRole('heading', { level: 1, name: 'My funding plan' })
 
-    await user.click(screen.getByRole('link', { name: 'Discover' }))
+    await user.click(screen.getByRole('link', { name: 'Opportunities' }))
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Discover' })).toBeInTheDocument()
-    expect(router.state.location.pathname).toBe('/discover')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Opportunities' })).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/opportunities')
     expect(screen.getByRole('main')).toHaveFocus()
   })
 
   it('centres the current link inside the scrollable navigation', async () => {
-    renderRoute('/awards')
-    await screen.findByRole('heading', { level: 1, name: 'Awards' })
+    renderRoute('/funding')
+    await screen.findByRole('heading', { level: 1, name: 'Funding and renewal' })
 
-    const nav = screen.getByRole('navigation', { name: 'Primary' })
     // jsdom has no layout, so every offset is 0 and the centred position resolves to 0.
-    expect(nav.scrollLeft).toBe(0)
+    expect(screen.getByRole('navigation', { name: 'Primary' }).scrollLeft).toBe(0)
   })
 
-  it('shows a not-found page with a way back to Today', async () => {
+  it('shows a not-found page with a way back', async () => {
     const { user, container } = renderRoute('/does-not-exist')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Page not found' })).toBeInTheDocument()
-    expect(document.title).toBe('Page not found | GRANTLY')
+    await waitFor(() => expect(document.title).toBe('Page not found | GRANTLY'))
     const nav = screen.getByRole('navigation', { name: 'Primary' })
     expect(within(nav).queryByRole('link', { current: 'page' })).not.toBeInTheDocument()
     expect(await axeViolations(container)).toEqual([])
 
-    await user.click(screen.getByRole('link', { name: 'Go to Today' }))
+    await user.click(screen.getByRole('link', { name: 'Go to My funding plan' }))
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Today' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'My funding plan' })).toBeInTheDocument()
   })
 
-  it('states that no scholarship data is shown yet', async () => {
-    renderRoute('/')
+  it('switches person from the header and remembers the choice', async () => {
+    const { user } = renderRoute('/')
+    await screen.findByRole('definition', { name: 'Still to find' })
+
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Viewing as' }), 'Arjun Kumar, student')
+
+    expect(await screen.findByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹80,000')
+    expect(localStorage.getItem('grantly')).toContain('"activePersonId":"arjun"')
+  })
+
+  it('reaches the person switch by keyboard, right after the brand link', async () => {
+    const { user } = renderRoute('/')
     await screen.findByRole('heading', { level: 1 })
 
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('No scholarship data is shown yet.')
+    await user.tab()
+    await user.tab()
+    await user.tab()
+
+    expect(screen.getByRole('combobox', { name: 'Viewing as' })).toHaveFocus()
+  })
+
+  it('resets the demo after confirmation, and can be cancelled', async () => {
+    const { user } = renderRoute('/')
+    await screen.findByRole('heading', { level: 1 })
+    useGrantlyStore.getState().setPerson('arjun')
+
+    await user.click(screen.getByRole('button', { name: 'Reset demo data' }))
+    expect(screen.getByText('Reset all demo progress?')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(useGrantlyStore.getState().activePersonId).toBe('arjun')
+
+    await user.click(screen.getByRole('button', { name: 'Reset demo data' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, reset' }))
+
+    expect(screen.getByRole('status')).toHaveTextContent('Demo data reset.')
+    expect(useGrantlyStore.getState().activePersonId).toBe('meera')
   })
 })
