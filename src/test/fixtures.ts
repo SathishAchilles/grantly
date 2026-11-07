@@ -3,7 +3,7 @@ import type { Student } from '@/domain/types'
 
 export const TODAY = '2026-11-07'
 
-/** A copy of a demo student with selected fields replaced. */
+/** A copy of a fictional student with selected fields replaced. */
 export const studentWith = (base: Student, overrides: Partial<Student>): Student => ({
   ...structuredClone(base),
   ...overrides,
