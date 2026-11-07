@@ -1,3 +1,4 @@
+import { MessageSquareText } from 'lucide-react'
 import { useEffect, useId, useState, type FormEvent } from 'react'
 import { schemeById } from '../data/schemes'
 import {
@@ -67,24 +68,32 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
   const finished = plan !== null && shown >= plan.steps.length
 
   return (
-    <section aria-labelledby="caseworker-heading" className="rounded-card border border-forest bg-surface p-6">
-      <h2 id="caseworker-heading" className="text-title font-semibold">
-        Caseworker
-      </h2>
-      <p className="mt-1 text-small font-medium text-muted">
+    <section
+      aria-labelledby="caseworker-heading"
+      className="self-start rounded-card border-2 border-forest/80 bg-surface p-5 shadow-soft sm:p-7"
+    >
+      <div className="flex items-center gap-3">
+        <span aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-forest text-white shadow-soft">
+          <MessageSquareText size={24} strokeWidth={2.2} />
+        </span>
+        <h2 id="caseworker-heading" className="text-title font-extrabold">
+          Caseworker
+        </h2>
+      </div>
+      <p className="mt-3 rounded-control bg-muted-soft px-3 py-2 text-small font-semibold text-muted">
         Reads a notice from a portal, email or letter and turns it into one task, using fixed rules.
       </p>
 
-      <form onSubmit={read} className="mt-4 space-y-4">
+      <form onSubmit={read} className="mt-5 space-y-5">
         <div>
-          <label htmlFor={ids.application} className="block font-medium">
+          <label htmlFor={ids.application} className="block font-bold">
             Application
           </label>
           <select
             id={ids.application}
             value={applicationId}
             onChange={(event) => setApplicationId(event.target.value)}
-            className="mt-1 min-h-11 w-full rounded-control border border-border bg-paper px-3"
+            className="mt-1.5 min-h-12 w-full rounded-control border-2 border-border bg-paper px-3 font-semibold"
           >
             {applications.map((candidate) => (
               <option key={candidate.id} value={candidate.id}>
@@ -95,8 +104,8 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
         </div>
 
         <fieldset>
-          <legend className="font-medium">Try a sample notice</legend>
-          <div className="mt-1 flex flex-wrap gap-2">
+          <legend className="font-bold">Try a sample notice</legend>
+          <div className="mt-2 flex flex-wrap gap-2">
             {sampleNotices.map((sample) => (
               <Button key={sample.label} variant="secondary" onClick={() => setNotice(sample.text)}>
                 {sample.label}
@@ -106,7 +115,7 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
         </fieldset>
 
         <div>
-          <label htmlFor={ids.notice} className="block font-medium">
+          <label htmlFor={ids.notice} className="block font-bold">
             Notice text
           </label>
           <textarea
@@ -116,29 +125,29 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
             aria-describedby={ids.hint}
             onChange={(event) => setNotice(event.target.value)}
             rows={3}
-            className="mt-1 w-full rounded-control border border-border bg-paper p-3"
+            className="mt-1.5 w-full rounded-control border-2 border-border bg-paper p-3"
           />
-          <p id={ids.hint} className="text-small text-muted">
+          <p id={ids.hint} className="mt-1 text-small text-muted">
             Paste the message from the portal, email or letter. {notice.length} of {NOTICE_MAX_LENGTH} characters.
           </p>
         </div>
 
-        <Button type="submit" disabled={notice.trim() === ''}>
+        <Button type="submit" disabled={notice.trim() === ''} className="w-full sm:w-auto">
           Read notice
         </Button>
       </form>
 
       {plan && (
-        <div className="mt-6">
-          <h3 className="font-semibold">What the caseworker did</h3>
-          <ol aria-live="polite" className="mt-2 list-decimal space-y-1 pl-5">
+        <div className="mt-6 rounded-[1.25rem] bg-forest-soft/60 p-4">
+          <h3 className="font-extrabold">What the caseworker did</h3>
+          <ol aria-live="polite" className="mt-2 list-decimal space-y-1.5 pl-6 marker:font-extrabold marker:text-forest-deep">
             {plan.steps.slice(0, shown).map((step) => (
               <li key={step}>{step}</li>
             ))}
           </ol>
           {finished && (
             <div className="mt-4 space-y-3">
-              <p className="font-semibold">{plan.summary}</p>
+              <p className="font-extrabold">{plan.summary}</p>
               {plan.source && <SourceLink source={plan.source} />}
               {plan.action && (
                 <ConfirmBar
@@ -156,7 +165,7 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
         </div>
       )}
 
-      <p role="status" className="mt-4 font-medium text-forest">
+      <p role="status" className="mt-4 font-bold text-forest-deep">
         {message}
       </p>
     </section>

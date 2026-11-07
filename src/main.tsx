@@ -1,5 +1,4 @@
-import '@fontsource-variable/fraunces'
-import '@fontsource-variable/inter'
+import '@fontsource-variable/nunito'
 import './styles/base.css'
 
 import { StrictMode } from 'react'

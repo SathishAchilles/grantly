@@ -4,11 +4,11 @@ import { Link } from 'react-router'
 type Variant = 'primary' | 'secondary'
 
 const base =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-4 text-small font-semibold transition-colors'
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-pill px-5 text-small font-bold transition-[background-color,box-shadow,transform] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-55'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-forest text-white hover:bg-forest-deep',
-  secondary: 'border border-border bg-surface text-ink hover:bg-paper',
+  primary: 'bg-forest text-white shadow-soft hover:bg-forest-deep hover:shadow-lift',
+  secondary: 'border-2 border-border bg-surface text-ink hover:border-forest hover:bg-forest-soft',
 }
 
 interface ButtonProps extends ComponentProps<'button'> {

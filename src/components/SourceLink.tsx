@@ -7,10 +7,10 @@ export function SourceLink({ source, label = 'Source' }: { source: Pick<Source, 
       href={source.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 text-small text-blue underline underline-offset-2"
+      className="inline-flex min-h-6 items-center gap-1 text-small font-semibold break-words text-blue underline decoration-blue/40 decoration-2 underline-offset-4 hover:decoration-blue"
     >
       {label}: {source.title}
-      <ExternalLink aria-hidden="true" size={12} />
+      <ExternalLink aria-hidden="true" size={14} className="shrink-0" />
       <span className="sr-only">(opens in a new tab)</span>
     </a>
   )
