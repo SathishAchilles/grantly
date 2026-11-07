@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0 (7 Nov 2026)
+
+### Fixed
+
+- Eligibility never reports a match when no rule applies; a known mismatch always wins. NMMSS is for school students only.
+- Fresh or renewal is worked out per scheme from the student's own applications.
+- Conflicting official deadlines stay unresolved and show every source; the earliest open date is offered only as a precaution.
+- Payment failures are diagnosed as invalid account details, account status, Aadhaar/NPCI mapping or unknown, and Aadhaar advice is given only when the notice mentions it.
+- Readiness counts every required document, shows conditional documents, and asks for confirmation when an academic year is unclear.
+- Next actions link to the page that resolves them, including `/readiness?scheme=<id>`.
+- Funding wording says how money will be paid; only confirmed support reduces the gap.
+- The app states that profiles are fictional, the Gmail connection is simulated and progress stays in this browser.
+- A page file missing after a new deployment offers "Reload page".
+
 ## 1.0.0 (7 Nov 2026)
 
 ### Added
