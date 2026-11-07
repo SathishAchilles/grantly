@@ -8,7 +8,6 @@ const areas = [
   { path: '/applications', label: 'Applications' },
   { path: '/funding', label: 'Funding and renewal' },
   { path: '/college', label: 'College desk' },
-  { path: '/combinations', label: 'Combinations' },
 ]
 
 for (const { path, label } of areas) {

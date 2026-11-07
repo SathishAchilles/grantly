@@ -19,7 +19,7 @@ test('every area loads under the Content Security Policy with no violations', as
   })
 
   await page.goto('/')
-  for (const area of ['Opportunities', 'Readiness', 'Applications', 'Funding and renewal', 'College desk', 'Combinations', 'My funding plan']) {
+  for (const area of ['Opportunities', 'Readiness', 'Applications', 'Funding and renewal', 'College desk', 'My funding plan']) {
     await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: area }).click()
     await expect(page.getByRole('heading', { level: 1, name: area })).toBeVisible()
   }

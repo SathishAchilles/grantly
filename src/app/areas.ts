@@ -3,7 +3,6 @@ import {
   Building2,
   ClipboardList,
   FileCheck2,
-  Layers,
   Search,
   Wallet,
   type LucideIcon,
@@ -22,5 +21,4 @@ export const areas: Area[] = [
   { path: '/applications', label: 'Applications', icon: ClipboardList },
   { path: '/funding', label: 'Funding and renewal', icon: Banknote },
   { path: '/college', label: 'College desk', icon: Building2 },
-  { path: '/combinations', label: 'Combinations', icon: Layers },
 ]

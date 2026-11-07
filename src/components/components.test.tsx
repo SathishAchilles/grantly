@@ -5,7 +5,6 @@ import { describe, expect, it, vi } from 'vitest'
 import type { StatusBasis } from '../domain/types'
 import { Button, ButtonLink } from './Button'
 import { Card } from './Card'
-import { NotBuilt } from './NotBuilt'
 import { PageHeader } from './PageHeader'
 import { StatusBadge } from './StatusBadge'
 
@@ -92,14 +91,5 @@ describe('PageHeader', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Awards' })).toBeInTheDocument()
     expect(screen.getByText('Follow the money.')).toBeInTheDocument()
     expect(document.title).toBe('Awards | GRANTLY')
-  })
-})
-
-describe('NotBuilt', () => {
-  it('states the area is not built and lists what it will do', () => {
-    render(<NotBuilt items={['First thing', 'Second thing']} />)
-
-    expect(screen.getByRole('heading', { level: 2, name: 'Not built yet' })).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['First thing', 'Second thing'])
   })
 })

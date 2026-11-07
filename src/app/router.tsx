@@ -13,7 +13,6 @@ export const routes: RouteObject[] = [
       { path: 'applications', lazy: () => import('../routes/applications') },
       { path: 'funding', lazy: () => import('../routes/funding') },
       { path: 'college', lazy: () => import('../routes/college') },
-      { path: 'combinations', lazy: () => import('../routes/combinations') },
       { path: '*', lazy: () => import('../routes/not-found') },
     ],
   },
