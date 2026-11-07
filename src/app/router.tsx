@@ -1,4 +1,5 @@
 import { createBrowserRouter, type RouteObject } from 'react-router'
+import { ErrorPage } from '../routes/error'
 import { Shell } from './Shell'
 
 export const routes: RouteObject[] = [
@@ -6,6 +7,7 @@ export const routes: RouteObject[] = [
     path: '/',
     Component: Shell,
     hydrateFallbackElement: <p role="status">Loading Grantly</p>,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, lazy: () => import('../routes/plan') },
       { path: 'opportunities', lazy: () => import('../routes/opportunities') },
