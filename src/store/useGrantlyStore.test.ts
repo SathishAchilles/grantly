@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { correctionNotice } from '../data/cases'
+import { mailbox } from '../data/emails'
 import { planResponse } from '../domain/caseworker'
+import { readEmail } from '../domain/email'
 import { required, TODAY } from '../test/fixtures'
-import { useGrantlyStore } from './useGrantlyStore'
+import { completeTask, useGrantlyStore } from './useGrantlyStore'
 
 const state = () => useGrantlyStore.getState()
 const meera = () => required(state().students.find((student) => student.id === 'meera'), 'Meera')
@@ -68,6 +70,81 @@ describe('useGrantlyStore', () => {
     expect(state().applications.find((application) => application.id === 'arjun-hdfc-2026')?.owner).toBe('student')
   })
 
+  it('applies email outcomes with evidence-based history and remembers processed emails', () => {
+    const arjun = required(state().students.find((student) => student.id === 'arjun'), 'Arjun')
+    const outcomes = mailbox
+      .filter((message) => message.studentId === 'arjun')
+      .map((message) => readEmail(message, arjun, state().applications, state().tasks))
+
+    state().applyEmailUpdates(outcomes, TODAY)
+
+    const after = required(state().students.find((student) => student.id === 'arjun'), 'Arjun')
+    const hdfc = required(state().applications.find((application) => application.id === 'arjun-hdfc-2026'), 'HDFC')
+    expect(after.support[0]?.state).toBe('confirmed')
+    expect(hdfc.tracks.application).toEqual({ label: 'Submitted', basis: 'evidence', date: TODAY })
+    expect(hdfc.owner).toBe('provider')
+    expect(hdfc.history.map((entry) => [entry.label, entry.basis])).toEqual(
+      expect.arrayContaining([
+        ['Submitted', 'evidence'],
+        ['Task added: Attend the HDFC Parivartan ECSS interview', 'evidence'],
+      ]),
+    )
+    expect(state().tasks.at(-1)).toMatchObject({ title: 'Attend the HDFC Parivartan ECSS interview', deadline: '2026-11-20', status: 'requested' })
+    expect(state().processedEmailIds).toEqual(['arjun-ecss-received', 'arjun-ecss-interview', 'arjun-fee-waiver', 'arjun-prize'])
+  })
+
+  it('applies payment, document and task-completion changes from email', () => {
+    state().applyEmailUpdates(
+      [
+        {
+          kind: 'update',
+          email: required(mailbox[1], 'letter email'),
+          summary: '',
+          changes: [
+            { type: 'payment', applicationId: 'meera-pmusp-2026', label: 'Payment initiated ₹12,000' },
+            { type: 'add-document', studentId: 'meera', doc: { id: 'd', type: 'enrolment-letter', label: 'Enrolment letter', academicYear: '2026-27', issuer: 'Lakeview' } },
+          ],
+        },
+      ],
+      TODAY,
+    )
+    expect(renewal().tracks.payment).toEqual({ label: 'Payment initiated ₹12,000', basis: 'evidence', date: TODAY })
+    expect(meera().documents.at(-1)).toMatchObject({ id: 'd', basis: 'evidence' })
+    expect(meera().support[0]?.state).toBe('pending')
+
+    const task = requestLetter()
+    state().applyEmailUpdates([{ kind: 'update', email: required(mailbox[1], 'letter email'), summary: '', changes: [{ type: 'complete-task', taskId: task.id }] }], TODAY)
+    expect(state().tasks.find((candidate) => candidate.id === task.id)?.status).toBe('completed')
+    expect(meera().documents.at(-1)).toMatchObject({ type: 'enrolment-letter', basis: 'evidence' })
+  })
+
+  it('confirms only the matching support item, leaving the others pending', () => {
+    useGrantlyStore.setState({
+      students: state().students.map((student) =>
+        student.id === 'meera'
+          ? { ...student, support: [...student.support, { id: 'other', label: 'Other award', amount: 5_000, kind: 'cash' as const, state: 'pending' as const }] }
+          : student,
+      ),
+    })
+
+    state().applyEmailUpdates(
+      [{ kind: 'update', email: required(mailbox[0], 'email'), summary: '', changes: [{ type: 'support-confirmed', studentId: 'meera', supportId: 'other' }] }],
+      TODAY,
+    )
+
+    expect(meera().support.map((item) => [item.id, item.state])).toEqual([
+      ['meera-pmusp-renewal', 'pending'],
+      ['other', 'confirmed'],
+    ])
+  })
+
+  it('completes a task with no document to issue', () => {
+    const before = completeTask(state(), 'task-ayesha-verify', TODAY, 'evidence')
+    expect(before.tasks.find((task) => task.id === 'task-ayesha-verify')?.status).toBe('completed')
+    expect(before.students).toBe(state().students)
+    expect(completeTask(state(), 'missing', TODAY, 'evidence')).toBe(state())
+  })
+
   it('restores everything on reset', () => {
     requestLetter()
     state().setPerson('arjun')
@@ -76,6 +153,7 @@ describe('useGrantlyStore', () => {
     expect(state().activePersonId).toBe('meera')
     expect(state().tasks).toHaveLength(4)
     expect(renewal().owner).toBe('student')
+    expect(state().processedEmailIds).toEqual([])
   })
 
   it('persists only data, under a versioned key', () => {
@@ -83,7 +161,7 @@ describe('useGrantlyStore', () => {
     const partialize = required(options.partialize, 'partialize')
 
     expect(options.name).toBe('grantly')
-    expect(options.version).toBe(2)
-    expect(Object.keys(partialize(state()))).toEqual(['activePersonId', 'students', 'applications', 'tasks'])
+    expect(options.version).toBe(3)
+    expect(Object.keys(partialize(state()))).toEqual(['activePersonId', 'students', 'applications', 'tasks', 'processedEmailIds'])
   })
 })
