@@ -22,7 +22,7 @@ async function runDemo(page: Page) {
   // Meera: a returned renewal becomes one college task.
   await viewAs(page, 'Meera Krishnan, student')
   await go(page, 'Applications')
-  const caseworker = page.getByRole('region', { name: 'Demo caseworker' })
+  const caseworker = page.getByRole('region', { name: 'Caseworker' })
   await caseworker.getByRole('button', { name: 'Returned: enrolment evidence' }).click()
   await caseworker.getByRole('button', { name: 'Read notice' }).click()
   await caseworker.getByRole('button', { name: 'Confirm' }).click()
@@ -54,9 +54,9 @@ test('the full demo runs, resets, and runs again the same way', async ({ page })
   await page.goto('/')
   await runDemo(page)
 
-  await page.getByRole('button', { name: 'Reset demo data' }).click()
-  await page.getByRole('button', { name: 'Yes, reset' }).click()
-  await expect(page.getByRole('status').filter({ hasText: 'Demo data reset.' })).toBeVisible()
+  await page.getByRole('button', { name: 'Start over' }).click()
+  await page.getByRole('button', { name: 'Yes, start over' }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Progress cleared.' })).toBeVisible()
 
   await go(page, 'My funding plan')
   await expect(page.getByRole('region', { name: 'Your funding position, 2026-27' })).toContainText('Still to find₹30,000')
