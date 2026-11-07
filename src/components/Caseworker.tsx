@@ -23,7 +23,15 @@ interface CaseworkerProps {
   applications: [Application, ...Application[]]
 }
 
-function ConfirmBar({ action, onDone, onCancel }: { action: ProposedAction; onDone: (message: string) => void; onCancel: () => void }) {
+function ConfirmBar({
+  action,
+  onDone,
+  onCancel,
+}: {
+  action: ProposedAction
+  onDone: (message: string) => void
+  onCancel: () => void
+}) {
   const confirm = useGrantlyStore((state) => state.confirmCaseworkerAction)
   return (
     <div className="flex flex-wrap gap-2">
@@ -74,7 +82,10 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
       className="self-start rounded-card border-2 border-forest/80 bg-surface p-5 shadow-soft sm:p-7"
     >
       <div className="flex items-center gap-3">
-        <span aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-forest text-white shadow-soft">
+        <span
+          aria-hidden="true"
+          className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-forest text-white shadow-soft"
+        >
           <MessageSquareText size={24} strokeWidth={2.2} />
         </span>
         <h2 id="caseworker-heading" className="text-title font-extrabold">
@@ -141,7 +152,10 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
       {plan && (
         <div className="mt-6 rounded-[1.25rem] bg-forest-soft/60 p-4">
           <h3 className="font-extrabold">What the caseworker did</h3>
-          <ol aria-live="polite" className="mt-2 list-decimal space-y-1.5 pl-6 marker:font-extrabold marker:text-forest-deep">
+          <ol
+            aria-live="polite"
+            className="mt-2 list-decimal space-y-1.5 pl-6 marker:font-extrabold marker:text-forest-deep"
+          >
             {plan.steps.slice(0, shown).map((step) => (
               <li key={step}>{step}</li>
             ))}

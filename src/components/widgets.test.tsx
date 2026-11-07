@@ -36,7 +36,10 @@ describe('SourceLink', () => {
 describe('DeadlineView', () => {
   it('marks a single passed deadline', () => {
     render(
-      <DeadlineView deadline={{ status: 'single', option: { date: '2026-10-01', source: sources.hdfcEcss, passed: true } }} confirmWith="HDFC" />,
+      <DeadlineView
+        deadline={{ status: 'single', option: { date: '2026-10-01', source: sources.hdfcEcss, passed: true } }}
+        confirmWith="HDFC"
+      />,
     )
     expect(screen.getByText(/\(passed\)/)).toBeInTheDocument()
   })
@@ -61,8 +64,14 @@ describe('DeadlineView', () => {
 
 describe('Caseworker', () => {
   const [renewal, hdfc] = [
-    required(applications.find((application) => application.id === 'meera-pmusp-2026'), 'renewal'),
-    required(applications.find((application) => application.id === 'arjun-hdfc-2026'), 'hdfc'),
+    required(
+      applications.find((application) => application.id === 'meera-pmusp-2026'),
+      'renewal',
+    ),
+    required(
+      applications.find((application) => application.id === 'arjun-hdfc-2026'),
+      'hdfc',
+    ),
   ] as [Application, Application]
 
   it('falls back to the first application if the selected one disappears', async () => {

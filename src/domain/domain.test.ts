@@ -22,7 +22,12 @@ describe('dates', () => {
   })
 
   it('sorts by deadline with undated items last', () => {
-    const items = [{ id: 'none' }, { id: 'late', deadline: '2026-12-15' }, { id: 'soon', deadline: '2026-11-20' }, { id: 'also-none' }]
+    const items = [
+      { id: 'none' },
+      { id: 'late', deadline: '2026-12-15' },
+      { id: 'soon', deadline: '2026-11-20' },
+      { id: 'also-none' },
+    ]
     expect([...items].sort(byDeadline).map((item) => item.id)).toEqual(['soon', 'late', 'none', 'also-none'])
   })
 })
@@ -61,7 +66,9 @@ describe('evaluateScheme: PM-USP CSSS', () => {
     const evaluation = evaluateScheme(pmUspCsss, freshStudent(), TODAY)
 
     expect(evaluation.open).toBe(false)
-    expect(evaluation.availability).toBe('Open for renewal applications only in 2026-27, so you cannot apply as a fresh applicant.')
+    expect(evaluation.availability).toBe(
+      'Open for renewal applications only in 2026-27, so you cannot apply as a fresh applicant.',
+    )
   })
 
   it('treats 84% as a percentage, not a percentile, and asks for evidence', () => {
@@ -73,8 +80,14 @@ describe('evaluateScheme: PM-USP CSSS', () => {
   })
 
   it('checks a known percentile', () => {
-    expect(outcome(pmUspCsss, freshStudent({ class12: { ...freshStudent().class12, percentile: 85 } }), 'percentile')?.result).toBe('met')
-    expect(outcome(pmUspCsss, freshStudent({ class12: { ...freshStudent().class12, percentile: 80 } }), 'percentile')?.result).toBe('not-met')
+    expect(
+      outcome(pmUspCsss, freshStudent({ class12: { ...freshStudent().class12, percentile: 85 } }), 'percentile')
+        ?.result,
+    ).toBe('met')
+    expect(
+      outcome(pmUspCsss, freshStudent({ class12: { ...freshStudent().class12, percentile: 80 } }), 'percentile')
+        ?.result,
+    ).toBe('not-met')
   })
 
   it.each([
@@ -119,7 +132,10 @@ describe('evaluateScheme: PM-USP CSSS', () => {
     const deadline = studentDeadline(pmUspCsss, TODAY)
 
     expect(deadline).toMatchObject({ status: 'conflict', recommended: '2026-11-30' })
-    expect(deadline.status === 'conflict' && deadline.options.map((option) => [option.date, option.passed, option.source.title])).toEqual([
+    expect(
+      deadline.status === 'conflict' &&
+        deadline.options.map((option) => [option.date, option.passed, option.source.title]),
+    ).toEqual([
       ['2026-10-31', true, 'NSP Students page announcement'],
       ['2026-11-30', false, 'NSP scheme catalogue'],
     ])
@@ -150,7 +166,9 @@ describe('evaluateScheme: other schemes', () => {
 
   it('HDFC ECSS: uses the latest results when present, and fails low marks or high income', () => {
     expect(outcome(hdfcEcss, renewalStudent(), 'marks')?.reason).toBe('68% in your previous exam.')
-    expect(outcome(hdfcEcss, freshStudent({ class12: { ...freshStudent().class12, percent: 54 } }), 'marks')?.result).toBe('not-met')
+    expect(
+      outcome(hdfcEcss, freshStudent({ class12: { ...freshStudent().class12, percent: 54 } }), 'marks')?.result,
+    ).toBe('not-met')
     expect(outcome(hdfcEcss, freshStudent({ familyIncome: 250_001 }), 'income')?.result).toBe('not-met')
     expect(outcome(hdfcEcss, freshStudent(), 'crisis')?.reason).toMatch(/not required/)
   })
@@ -161,9 +179,14 @@ describe('evaluateScheme: other schemes', () => {
     expect(evaluation.overall).toBe('more-information-needed')
     expect(outcome(ffe, freshStudent(), 'rank')?.result).toBe('needs-confirmation')
     expect(outcome(ffe, freshStudent({ course: 'B.Sc. Physics' }), 'course')?.result).toBe('not-met')
-    expect(outcome(ffe, freshStudent({ class12: { ...freshStudent().class12, year: 2024 } }), 'class-12-year')?.result).toBe('not-met')
+    expect(
+      outcome(ffe, freshStudent({ class12: { ...freshStudent().class12, year: 2024 } }), 'class-12-year')?.result,
+    ).toBe('not-met')
     expect(outcome(ffe, freshStudent({ familyIncome: 400_000 }), 'income')?.result).toBe('not-met')
-    expect(evaluation.deadline).toEqual({ status: 'none', note: 'Applications opened on 1 Aug 2026. FFE has not published a closing date.' })
+    expect(evaluation.deadline).toEqual({
+      status: 'none',
+      note: 'Applications opened on 1 Aug 2026. FFE has not published a closing date.',
+    })
     expect(ffe.amountFor(freshStudent()).value).toBeNull()
     expect(evaluateScheme(ffe, renewalStudent(), TODAY).open).toBe(false)
   })

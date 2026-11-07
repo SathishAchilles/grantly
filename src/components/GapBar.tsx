@@ -48,13 +48,51 @@ export function GapBar({ summary }: { summary: FundingSummary }) {
       </defs>
       <g clipPath={`url(#${ids}-clip)`}>
         <rect width="100%" height={BAR_HEIGHT} className="fill-muted-soft" />
-        <rect x="0" width={percent(family, total)} height={BAR_HEIGHT} strokeWidth="2" className={`fill-muted stroke-surface ${segment}`} />
-        <rect x={percent(family, total)} width={percent(confirmed, total)} height={BAR_HEIGHT} strokeWidth="2" className={`fill-forest stroke-surface ${segment}`} />
-        <rect x={percent(gapStart, total)} width={percent(pending, total)} height={BAR_HEIGHT} strokeWidth="2" className={`fill-marigold stroke-surface ${segment}`} />
-        <rect x={percent(gapStart + pending, total)} width={percent(remaining, total)} height={BAR_HEIGHT} fill={`url(#${ids}-hatch)`} className={segment} />
-        <rect width="100%" height={BAR_HEIGHT} rx={BAR_HEIGHT / 2} fill="none" strokeWidth="2" className="stroke-ink/10" />
+        <rect
+          x="0"
+          width={percent(family, total)}
+          height={BAR_HEIGHT}
+          strokeWidth="2"
+          className={`fill-muted stroke-surface ${segment}`}
+        />
+        <rect
+          x={percent(family, total)}
+          width={percent(confirmed, total)}
+          height={BAR_HEIGHT}
+          strokeWidth="2"
+          className={`fill-forest stroke-surface ${segment}`}
+        />
+        <rect
+          x={percent(gapStart, total)}
+          width={percent(pending, total)}
+          height={BAR_HEIGHT}
+          strokeWidth="2"
+          className={`fill-marigold stroke-surface ${segment}`}
+        />
+        <rect
+          x={percent(gapStart + pending, total)}
+          width={percent(remaining, total)}
+          height={BAR_HEIGHT}
+          fill={`url(#${ids}-hatch)`}
+          className={segment}
+        />
+        <rect
+          width="100%"
+          height={BAR_HEIGHT}
+          rx={BAR_HEIGHT / 2}
+          fill="none"
+          strokeWidth="2"
+          className="stroke-ink/10"
+        />
       </g>
-      <rect x={percent(gapStart, total)} y={BRACKET_Y} width={percent(summary.gap, total)} height="2" rx="1" className={`fill-rust ${segment}`} />
+      <rect
+        x={percent(gapStart, total)}
+        y={BRACKET_Y}
+        width={percent(summary.gap, total)}
+        height="2"
+        rx="1"
+        className={`fill-rust ${segment}`}
+      />
     </svg>
   )
 }

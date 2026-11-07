@@ -3,6 +3,7 @@
 ## 1.0.0 (7 Nov 2026)
 
 ### Added
+
 - My funding plan: next action first, gap bar, and a remaining gap that counts only confirmed support.
 - Opportunities: per-condition eligibility with official sources, percentile-versus-percentage handling, renewal-only availability and conflicting-deadline warnings.
 - Readiness: per-programme document checks with accepted alternatives and rejected substitutes.
@@ -14,7 +15,9 @@
 - Test suite: Vitest and Testing Library with 100% coverage, Playwright with axe at three widths.
 
 ### Changed
+
 - Friendly mobile-first design with the Nunito font.
 
 ### Removed
+
 - The unbuilt Combinations area.

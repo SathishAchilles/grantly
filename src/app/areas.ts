@@ -1,12 +1,4 @@
-import {
-  Banknote,
-  Building2,
-  ClipboardList,
-  FileCheck2,
-  Search,
-  Wallet,
-  type LucideIcon,
-} from 'lucide-react'
+import { Banknote, Building2, ClipboardList, FileCheck2, Search, Wallet, type LucideIcon } from 'lucide-react'
 
 /** A top-level section of the app, shown in the main navigation. */
 export interface Area {

@@ -57,7 +57,9 @@ export function EmailSync({ student }: { student: Student }) {
         <Mail aria-hidden="true" size={22} className="text-forest" />
         Application emails
       </h2>
-      <p className="mt-1 text-small text-muted">From Gmail. Bring in the latest emails about your applications and funding.</p>
+      <p className="mt-1 text-small text-muted">
+        From Gmail. Bring in the latest emails about your applications and funding.
+      </p>
 
       <Button variant="secondary" className="mt-4" onClick={fetchEmails}>
         Fetch application emails

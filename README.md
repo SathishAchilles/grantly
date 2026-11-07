@@ -8,12 +8,12 @@ Grantly helps students in India turn scholarship opportunities into usable educa
 
 ## Screenshots
 
-| My funding plan (desktop) | My funding plan (mobile) |
-|---|---|
+| My funding plan (desktop)                                                                                         | My funding plan (mobile)                                        |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | ![My funding plan with the next action, funding gap bar and confirmed support](docs/screenshots/plan-desktop.png) | ![My funding plan on a phone](docs/screenshots/plan-mobile.png) |
 
-| Opportunities | Applications | Funding and renewal |
-|---|---|---|
+| Opportunities                                                                                          | Applications                                                                        | Funding and renewal                                                        |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | ![Eligibility checked condition by condition with sources](docs/screenshots/opportunities-desktop.png) | ![Application tracks and the caseworker](docs/screenshots/applications-desktop.png) | ![Award, payment and renewal tracks](docs/screenshots/funding-desktop.png) |
 
 ## Features
@@ -34,17 +34,17 @@ The Gmail connection is simulated. Grantly does not sign in to Google or read a 
 
 ## Tech stack
 
-| Tool | Version | Why |
-|---|---|---|
-| React | 19.3 | Components and concurrent rendering |
-| TypeScript | 6.0, strict, `noUncheckedIndexedAccess` | Type safety; pinned because `typescript-eslint` does not yet support 6.1 |
-| Vite | 8 | Fast builds, code splitting |
-| React Router | 8 | Lazy-loaded route per area, root error page |
-| Zustand | 5 | Small store, persisted in `localStorage` |
-| Tailwind CSS | 4 | Design tokens in `src/styles/tokens.css` |
-| Vitest, Testing Library | 5, 16 | Unit and component tests, 100% coverage threshold |
-| Playwright, axe-core | 1.65, 4 | End-to-end, accessibility and security-header tests |
-| ESLint | 9 | Pinned because `eslint-plugin-jsx-a11y` does not yet support 10 |
+| Tool                    | Version                                 | Why                                                                      |
+| ----------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| React                   | 19.3                                    | Components and concurrent rendering                                      |
+| TypeScript              | 6.0, strict, `noUncheckedIndexedAccess` | Type safety; pinned because `typescript-eslint` does not yet support 6.1 |
+| Vite                    | 8                                       | Fast builds, code splitting                                              |
+| React Router            | 8                                       | Lazy-loaded route per area, root error page                              |
+| Zustand                 | 5                                       | Small store, persisted in `localStorage`                                 |
+| Tailwind CSS            | 4                                       | Design tokens in `src/styles/tokens.css`                                 |
+| Vitest, Testing Library | 5, 16                                   | Unit and component tests, 100% coverage threshold                        |
+| Playwright, axe-core    | 1.65, 4                                 | End-to-end, accessibility and security-header tests                      |
+| ESLint                  | 9                                       | Pinned because `eslint-plugin-jsx-a11y` does not yet support 10          |
 
 ## Project structure
 
@@ -78,17 +78,17 @@ No environment variables are needed; see `.env.example`.
 
 ## Available scripts
 
-| Script | What it does |
-|---|---|
-| `npm run dev` | Start the dev server |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Serve the build with the production security headers |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` | ESLint with zero warnings allowed |
-| `npm test` | Vitest with coverage (fails below 100%) |
-| `npm run test:watch` | Vitest in watch mode |
-| `npm run test:e2e` | Playwright with axe at 360, 768 and 1440 px |
-| `npm run check` | Type check, lint, tests and build |
+| Script               | What it does                                         |
+| -------------------- | ---------------------------------------------------- |
+| `npm run dev`        | Start the dev server                                 |
+| `npm run build`      | Production build to `dist/`                          |
+| `npm run preview`    | Serve the build with the production security headers |
+| `npm run typecheck`  | `tsc --noEmit`                                       |
+| `npm run lint`       | ESLint with zero warnings allowed                    |
+| `npm test`           | Vitest with coverage (fails below 100%)              |
+| `npm run test:watch` | Vitest in watch mode                                 |
+| `npm run test:e2e`   | Playwright with axe at 360, 768 and 1440 px          |
+| `npm run check`      | Type check, lint, tests and build                    |
 
 ## Testing
 

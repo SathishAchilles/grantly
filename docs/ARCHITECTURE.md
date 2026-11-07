@@ -22,15 +22,15 @@ Imports use the `@/` alias for `src/`. Dependencies point one way: `routes` → 
 
 ## Domain modules
 
-| Module | Responsibility |
-|---|---|
-| `domain/types.ts` | Shared types. Application, award, payment and renewal are separate tracks, and each status has a basis (provider-confirmed, evidence, college-confirmed, student-reported) |
-| `domain/funding.ts` | Funding gap: costs minus family contribution minus **confirmed** support only |
-| `domain/eligibility.ts` | Per-condition outcomes (meets, does not meet, more information needed, rule needs confirmation) and deadline conflicts between official sources |
-| `domain/readiness.ts` | Per-programme document checks, including accepted alternatives, rejected substitutes and wrong academic years |
-| `domain/caseworker.ts` | Turns a provider notice into one task using ordered keyword rules; caps and normalises input |
-| `domain/email.ts` | Reads application emails into status, task, document and funding changes; flags likely scams |
-| `domain/dates.ts` | India-time dates, display formatting and deadline ordering |
+| Module                  | Responsibility                                                                                                                                                             |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `domain/types.ts`       | Shared types. Application, award, payment and renewal are separate tracks, and each status has a basis (provider-confirmed, evidence, college-confirmed, student-reported) |
+| `domain/funding.ts`     | Funding gap: costs minus family contribution minus **confirmed** support only                                                                                              |
+| `domain/eligibility.ts` | Per-condition outcomes (meets, does not meet, more information needed, rule needs confirmation) and deadline conflicts between official sources                            |
+| `domain/readiness.ts`   | Per-programme document checks, including accepted alternatives, rejected substitutes and wrong academic years                                                              |
+| `domain/caseworker.ts`  | Turns a provider notice into one task using ordered keyword rules; caps and normalises input                                                                               |
+| `domain/email.ts`       | Reads application emails into status, task, document and funding changes; flags likely scams                                                                               |
+| `domain/dates.ts`       | India-time dates, display formatting and deadline ordering                                                                                                                 |
 
 ## State
 

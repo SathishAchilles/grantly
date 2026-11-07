@@ -27,7 +27,8 @@ function SupportList({ items, icon: Icon, tone }: SupportListProps) {
           </span>
           <span className="flex min-w-0 flex-1 items-baseline justify-between gap-x-4">
             <span className="min-w-0 flex-1 font-semibold">
-              {item.label} <span className="block text-small font-normal text-muted">({supportKindLabel[item.kind]})</span>
+              {item.label}{' '}
+              <span className="block text-small font-normal text-muted">({supportKindLabel[item.kind]})</span>
             </span>
             <span className="shrink-0 font-extrabold">
               <Money amount={item.amount} />
@@ -42,9 +43,7 @@ function SupportList({ items, icon: Icon, tone }: SupportListProps) {
 function FundingPlan({ student }: { student: Student }) {
   const summary = fundingSummary(student)
   const tasks = useGrantlyStore((state) => state.tasks)
-  const open = tasks
-    .filter((task) => task.studentId === student.id && task.status !== 'completed')
-    .sort(byDeadline)
+  const open = tasks.filter((task) => task.studentId === student.id && task.status !== 'completed').sort(byDeadline)
 
   return (
     <div className="space-y-10">
@@ -79,10 +78,20 @@ function FundingPlan({ student }: { student: Student }) {
             <Fact label="Costs this year" termClassName="px-3 py-1.5" valueClassName="px-3 py-1.5 text-right font-bold">
               <Money amount={summary.costs} />
             </Fact>
-            <Fact label="Family contribution" icon={<Swatch part="family" />} termClassName="flex items-center gap-2 px-3 py-1.5" valueClassName="px-3 py-1.5 text-right font-bold">
+            <Fact
+              label="Family contribution"
+              icon={<Swatch part="family" />}
+              termClassName="flex items-center gap-2 px-3 py-1.5"
+              valueClassName="px-3 py-1.5 text-right font-bold"
+            >
               <Money amount={summary.familyContribution} />
             </Fact>
-            <Fact label="Confirmed support" icon={<Swatch part="confirmed" />} termClassName="flex items-center gap-2 px-3 py-1.5" valueClassName="px-3 py-1.5 text-right font-bold text-forest-deep">
+            <Fact
+              label="Confirmed support"
+              icon={<Swatch part="confirmed" />}
+              termClassName="flex items-center gap-2 px-3 py-1.5"
+              valueClassName="px-3 py-1.5 text-right font-bold text-forest-deep"
+            >
               <Money amount={summary.confirmedTotal} />
             </Fact>
             <Fact
@@ -112,7 +121,9 @@ function FundingPlan({ student }: { student: Student }) {
             </>
           ) : (
             summary.confirmed.length === 0 && (
-              <p className="mt-6 rounded-control bg-paper p-3 text-muted">No scholarship support yet. See Opportunities.</p>
+              <p className="mt-6 rounded-control bg-paper p-3 text-muted">
+                No scholarship support yet. See Opportunities.
+              </p>
             )
           )}
         </Card>
@@ -125,7 +136,10 @@ function FundingPlan({ student }: { student: Student }) {
 /** The funding plan page: what is confirmed, what is still missing and who has to act next. */
 export function Component() {
   return (
-    <StudentOnly title="My funding plan" purpose="See what is confirmed, what is still missing, and who has to act next.">
+    <StudentOnly
+      title="My funding plan"
+      purpose="See what is confirmed, what is still missing, and who has to act next."
+    >
       {(student) => <FundingPlan student={student} />}
     </StudentOnly>
   )

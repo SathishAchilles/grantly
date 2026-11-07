@@ -87,7 +87,9 @@ export const pmUspCsss: Scheme = {
       appliesTo: 'fresh',
       source: sources.csssFaq,
       evaluate: (student) =>
-        student.gapYearAfterClass12 ? notMet('You took a gap year after Class XII.') : met('No gap year after Class XII.'),
+        student.gapYearAfterClass12
+          ? notMet('You took a gap year after Class XII.')
+          : met('No gap year after Class XII.'),
     },
     {
       id: 'recognised-institution',
@@ -116,7 +118,12 @@ export const pmUspCsss: Scheme = {
       appliesTo: 'renewal',
       source: sources.csssGuidelines,
       evaluate: ({ latestResults }) => {
-        if (!latestResults) return { result: 'need-info', reason: 'Your latest marks are not recorded.', ask: 'Add your latest marksheet.' }
+        if (!latestResults)
+          return {
+            result: 'need-info',
+            reason: 'Your latest marks are not recorded.',
+            ask: 'Add your latest marksheet.',
+          }
         return latestResults.marksPercent >= 50
           ? met(`${latestResults.marksPercent}% in ${latestResults.academicYear}.`)
           : notMet(`${latestResults.marksPercent}% in ${latestResults.academicYear}.`)
@@ -128,7 +135,12 @@ export const pmUspCsss: Scheme = {
       appliesTo: 'renewal',
       source: sources.csssGuidelines,
       evaluate: ({ latestResults }) => {
-        if (!latestResults) return { result: 'need-info', reason: 'Your attendance is not recorded.', ask: 'Ask your college for your attendance record.' }
+        if (!latestResults)
+          return {
+            result: 'need-info',
+            reason: 'Your attendance is not recorded.',
+            ask: 'Ask your college for your attendance record.',
+          }
         return latestResults.attendancePercent >= 75
           ? met(`${latestResults.attendancePercent}% attendance in ${latestResults.academicYear}.`)
           : notMet(`${latestResults.attendancePercent}% attendance in ${latestResults.academicYear}.`)
@@ -419,7 +431,9 @@ export const nmmss: Scheme = {
       appliesTo: 'fresh',
       source: sources.nmmssPib,
       evaluate: (student) =>
-        student.schoolClass === 9 ? met('You are in Class IX.') : notMet('This scheme is for school students in Class IX.'),
+        student.schoolClass === 9
+          ? met('You are in Class IX.')
+          : notMet('This scheme is for school students in Class IX.'),
     },
   ],
   evidence: [],

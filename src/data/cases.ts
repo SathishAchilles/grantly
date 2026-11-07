@@ -42,8 +42,20 @@ export const applications: Application[] = [
       application: { label: 'Correction required', basis: 'provider-confirmed', date: '2026-11-05' },
     },
     history: [
-      { date: '2026-10-20', track: 'application', label: 'Submitted', basis: 'evidence', note: 'NSP acknowledgement saved.' },
-      { date: '2026-11-05', track: 'application', label: 'Correction required', basis: 'provider-confirmed', note: correctionNotice },
+      {
+        date: '2026-10-20',
+        track: 'application',
+        label: 'Submitted',
+        basis: 'evidence',
+        note: 'NSP acknowledgement saved.',
+      },
+      {
+        date: '2026-11-05',
+        track: 'application',
+        label: 'Correction required',
+        basis: 'provider-confirmed',
+        note: correctionNotice,
+      },
     ],
   },
   {

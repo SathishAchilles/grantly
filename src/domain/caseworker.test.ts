@@ -62,11 +62,22 @@ describe('planResponse', () => {
 
   it('attaches a current-year letter when Meera already has one', () => {
     const student = renewalStudent()
-    student.documents.push({ id: 'new', type: 'enrolment-letter', label: 'Enrolment letter', academicYear: '2026-27', issuer: 'Lakeview Arts and Science College', basis: 'college-confirmed' })
+    student.documents.push({
+      id: 'new',
+      type: 'enrolment-letter',
+      label: 'Enrolment letter',
+      academicYear: '2026-27',
+      issuer: 'Lakeview Arts and Science College',
+      basis: 'college-confirmed',
+    })
 
     const plan = planResponse(correctionNotice, student, renewal)
 
-    expect(plan.action).toEqual({ type: 'attach-document', applicationId: renewal.id, doc: expect.objectContaining({ id: 'new' }) })
+    expect(plan.action).toEqual({
+      type: 'attach-document',
+      applicationId: renewal.id,
+      doc: expect.objectContaining({ id: 'new' }),
+    })
     expect(plan.summary).toMatch(/Your other answers stay as submitted/)
   })
 
@@ -80,11 +91,18 @@ describe('planResponse', () => {
     const plan = planResponse('Application incomplete: income certificate not uploaded.', renewalStudent(), renewal)
 
     expect(plan.kind).toBe('missing-document')
-    expect(plan.action).toMatchObject({ type: 'create-task', task: { owner: 'student', title: 'Add your income certificate' } })
+    expect(plan.action).toMatchObject({
+      type: 'create-task',
+      task: { owner: 'student', title: 'Add your income certificate' },
+    })
   })
 
   it('explains the NPCI mapper for a payment problem, with its source', () => {
-    const plan = planResponse('Payment failed: Aadhaar not seeded in NPCI mapper for the account.', renewalStudent(), renewal)
+    const plan = planResponse(
+      'Payment failed: Aadhaar not seeded in NPCI mapper for the account.',
+      renewalStudent(),
+      renewal,
+    )
 
     expect(plan.steps[2]).toMatch(/not the same as the NPCI mapper/)
     expect(plan.source?.title).toBe('PFMS Aadhaar seeding guide')

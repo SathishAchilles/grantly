@@ -33,14 +33,15 @@ describe('scheme registry', () => {
     const unpublished = amounts.filter((amount) => amount.value === null)
 
     expect(published.every((amount) => amount.source?.url.startsWith('https://'))).toBe(true)
-    expect(unpublished.every((amount) => amount.source === null && amount.basis === 'Not published by the provider')).toBe(true)
+    expect(
+      unpublished.every((amount) => amount.source === null && amount.basis === 'Not published by the provider'),
+    ).toBe(true)
   })
 
   it('publishes amounts only for PM-USP CSSS and HDFC ECSS', () => {
-    expect(schemes.filter((scheme) => scheme.amountFor(freshStudent()).value !== null).map((scheme) => scheme.id)).toEqual([
-      'pm-usp-csss',
-      'hdfc-ecss',
-    ])
+    expect(
+      schemes.filter((scheme) => scheme.amountFor(freshStudent()).value !== null).map((scheme) => scheme.id),
+    ).toEqual(['pm-usp-csss', 'hdfc-ecss'])
   })
 
   it('looks schemes up by id', () => {

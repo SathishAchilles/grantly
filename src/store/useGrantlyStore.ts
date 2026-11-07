@@ -40,7 +40,8 @@ const initialData = (): GrantlyData =>
 
 const isObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
 
-const isArrayOf = (value: unknown, check: (item: unknown) => boolean): boolean => Array.isArray(value) && value.every(check)
+const isArrayOf = (value: unknown, check: (item: unknown) => boolean): boolean =>
+  Array.isArray(value) && value.every(check)
 
 const knownSchemeIds = new Set(schemes.map((scheme) => scheme.id))
 const knownPersonIds = new Set(people.map((person) => person.id))
@@ -65,7 +66,10 @@ export function isGrantlyData(value: unknown): value is GrantlyData {
         Array.isArray(application.history) &&
         isObject(application.tracks),
     ) &&
-    isArrayOf(value.tasks, (task) => isObject(task) && typeof task.id === 'string' && typeof task.applicationId === 'string') &&
+    isArrayOf(
+      value.tasks,
+      (task) => isObject(task) && typeof task.id === 'string' && typeof task.applicationId === 'string',
+    ) &&
     isArrayOf(value.processedEmailIds, (id) => typeof id === 'string')
   )
 }
@@ -79,17 +83,27 @@ const withApplication = (records: Records, id: string, update: (application: App
 export function completeTask(records: Records, taskId: string, today: string, basis: StatusBasis): Records {
   const task = records.tasks.find((candidate) => candidate.id === taskId)
   if (!task) return records
-  const next = { ...records, tasks: records.tasks.map((candidate) => (candidate.id === taskId ? { ...candidate, status: 'completed' as const } : candidate)) }
+  const next = {
+    ...records,
+    tasks: records.tasks.map((candidate) =>
+      candidate.id === taskId ? { ...candidate, status: 'completed' as const } : candidate,
+    ),
+  }
   const { fulfils } = task
   if (!fulfils) return next
   const students = next.students.map((student) =>
-    student.id === task.studentId ? { ...student, documents: [...student.documents, { ...fulfils, id: `${task.id}-doc`, basis }] } : student,
+    student.id === task.studentId
+      ? { ...student, documents: [...student.documents, { ...fulfils, id: `${task.id}-doc`, basis }] }
+      : student,
   )
   return withApplication({ ...next, students }, task.applicationId, (application) => ({
     ...application,
     owner: 'student',
     nextAction: 'Your college issued the letter. Attach it to your correction.',
-    history: [...application.history, { date: today, track: 'application', label: `${fulfils.label} issued by college`, basis }],
+    history: [
+      ...application.history,
+      { date: today, track: 'application', label: `${fulfils.label} issued by college`, basis },
+    ],
   }))
 }
 
@@ -102,20 +116,31 @@ function applyChange(records: Records, change: EmailChange, subject: string, tod
         ...application,
         owner: change.owner,
         tracks: { ...application.tracks, application: { label: change.label, basis: 'evidence', date: today } },
-        history: [...application.history, { date: today, track: 'application', label: change.label, basis: 'evidence', note: note(subject) }],
+        history: [
+          ...application.history,
+          { date: today, track: 'application', label: change.label, basis: 'evidence', note: note(subject) },
+        ],
       }))
     case 'payment':
       return withApplication(records, change.applicationId, (application) => ({
         ...application,
         tracks: { ...application.tracks, payment: { label: change.label, basis: 'evidence', date: today } },
-        history: [...application.history, { date: today, track: 'payment', label: change.label, basis: 'evidence', note: note(subject) }],
+        history: [
+          ...application.history,
+          { date: today, track: 'payment', label: change.label, basis: 'evidence', note: note(subject) },
+        ],
       }))
     case 'support-confirmed':
       return {
         ...records,
         students: records.students.map((student) =>
           student.id === change.studentId
-            ? { ...student, support: student.support.map((item) => (item.id === change.supportId ? { ...item, state: 'confirmed' as const } : item)) }
+            ? {
+                ...student,
+                support: student.support.map((item) =>
+                  item.id === change.supportId ? { ...item, state: 'confirmed' as const } : item,
+                ),
+              }
             : student,
         ),
       }
@@ -123,7 +148,16 @@ function applyChange(records: Records, change: EmailChange, subject: string, tod
       const task: Task = { ...change.task, id: `task-${records.tasks.length + 1}`, status: 'requested' }
       return withApplication({ ...records, tasks: [...records.tasks, task] }, task.applicationId, (application) => ({
         ...application,
-        history: [...application.history, { date: today, track: 'application', label: `Task added: ${task.title}`, basis: 'evidence', note: note(subject) }],
+        history: [
+          ...application.history,
+          {
+            date: today,
+            track: 'application',
+            label: `Task added: ${task.title}`,
+            basis: 'evidence',
+            note: note(subject),
+          },
+        ],
       }))
     }
     case 'complete-task':
@@ -132,7 +166,9 @@ function applyChange(records: Records, change: EmailChange, subject: string, tod
       return {
         ...records,
         students: records.students.map((student) =>
-          student.id === change.studentId ? { ...student, documents: [...student.documents, { ...change.doc, basis: 'evidence' }] } : student,
+          student.id === change.studentId
+            ? { ...student, documents: [...student.documents, { ...change.doc, basis: 'evidence' }] }
+            : student,
         ),
       }
   }
@@ -145,7 +181,11 @@ export function applyEmailOutcomes(data: GrantlyData, outcomes: EmailOutcome[], 
     if (outcome.kind !== 'update') continue
     for (const change of outcome.changes) records = applyChange(records, change, outcome.email.subject, today)
   }
-  return { ...data, ...records, processedEmailIds: [...data.processedEmailIds, ...outcomes.map((outcome) => outcome.email.id)] }
+  return {
+    ...data,
+    ...records,
+    processedEmailIds: [...data.processedEmailIds, ...outcomes.map((outcome) => outcome.email.id)],
+  }
 }
 
 /** The app store. Progress is saved in `localStorage` and restored when the shape is valid. */
@@ -171,7 +211,10 @@ export const useGrantlyStore = create<GrantlyState>()(
               ...application,
               owner: task.owner,
               nextAction: task.title,
-              history: [...application.history, { date: today, track: 'application', label: `Requested: ${task.title}`, basis: 'student-reported' }],
+              history: [
+                ...application.history,
+                { date: today, track: 'application', label: `Requested: ${task.title}`, basis: 'student-reported' },
+              ],
             }))
             return { tasks: [...state.tasks, task], applications: updated.applications }
           }
@@ -180,16 +223,27 @@ export const useGrantlyStore = create<GrantlyState>()(
             owner: 'institution',
             nextAction: 'Wait for your institute to verify the corrected application.',
             notice: undefined,
-            tracks: { ...application.tracks, application: { label: 'Correction resubmitted', basis: 'student-reported', date: today } },
+            tracks: {
+              ...application.tracks,
+              application: { label: 'Correction resubmitted', basis: 'student-reported', date: today },
+            },
             history: [
               ...application.history,
-              { date: today, track: 'application', label: 'Correction resubmitted', basis: 'student-reported', note: `Attached: ${action.doc.label} (${action.doc.academicYear})` },
+              {
+                date: today,
+                track: 'application',
+                label: 'Correction resubmitted',
+                basis: 'student-reported',
+                note: `Attached: ${action.doc.label} (${action.doc.academicYear})`,
+              },
             ],
           }))
           return {
             applications: updated.applications,
             tasks: state.tasks.map((task) =>
-              task.applicationId === action.applicationId && task.owner === 'student' ? { ...task, status: 'completed' as const } : task,
+              task.applicationId === action.applicationId && task.owner === 'student'
+                ? { ...task, status: 'completed' as const }
+                : task,
             ),
           }
         }),

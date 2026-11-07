@@ -47,8 +47,10 @@ export const cleanNotice = (text: string) => text.slice(0, NOTICE_MAX_LENGTH).re
  */
 export function interpretNotice(text: string): Interpretation {
   const notice = cleanNotice(text).toLowerCase()
-  if (/enrol|enroll|bonafide/.test(notice) && /academic year|current|bonafide/.test(notice)) return { kind: 'enrolment-evidence' }
-  if (/aadhaar|npci|seeding|account/.test(notice) && /payment|failed|rejected|credit/.test(notice)) return { kind: 'payment-issue' }
+  if (/enrol|enroll|bonafide/.test(notice) && /academic year|current|bonafide/.test(notice))
+    return { kind: 'enrolment-evidence' }
+  if (/aadhaar|npci|seeding|account/.test(notice) && /payment|failed|rejected|credit/.test(notice))
+    return { kind: 'payment-issue' }
   if (/missing|not uploaded|incomplete/.test(notice)) {
     const match = documentWords.find(([pattern]) => pattern.test(notice))
     if (match) return { kind: 'missing-document', docType: match[1] }
@@ -85,7 +87,11 @@ export function planResponse(text: string, student: Student, application: Applic
       if (current) {
         return {
           kind: interpretation.kind,
-          steps: [read, identified, `Found your ${current.label.toLowerCase()} for ${application.academicYear}, issued by ${current.issuer}.`],
+          steps: [
+            read,
+            identified,
+            `Found your ${current.label.toLowerCase()} for ${application.academicYear}, issued by ${current.issuer}.`,
+          ],
           summary: `Attach your ${application.academicYear} enrolment letter to the correction. Your other answers stay as submitted.`,
           action: { type: 'attach-document', applicationId: application.id, doc: current },
         }
@@ -124,7 +130,10 @@ export function planResponse(text: string, student: Student, application: Applic
         kind: interpretation.kind,
         steps: [read, `Identified a missing ${name}.`],
         summary: `Add your ${name}, then resubmit the correction.`,
-        action: { type: 'create-task', task: { ...taskBase, title: `Add your ${name}`, owner: 'student', deadline: application.deadline } },
+        action: {
+          type: 'create-task',
+          task: { ...taskBase, title: `Add your ${name}`, owner: 'student', deadline: application.deadline },
+        },
       }
     }
     case 'payment-issue':
@@ -137,7 +146,10 @@ export function planResponse(text: string, student: Student, application: Applic
         ],
         summary: 'Visit your bank branch and ask them to update the NPCI mapper for your account.',
         source: sources.pfmsSeeding,
-        action: { type: 'create-task', task: { ...taskBase, title: 'Ask your bank to update the NPCI mapper', owner: 'bank' } },
+        action: {
+          type: 'create-task',
+          task: { ...taskBase, title: 'Ask your bank to update the NPCI mapper', owner: 'bank' },
+        },
       }
     case 'unrecognised':
       return {

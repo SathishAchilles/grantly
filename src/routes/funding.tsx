@@ -49,7 +49,9 @@ function Timeline({ application }: { application: Application }) {
               <span
                 aria-hidden="true"
                 className={`relative grid size-14 shrink-0 place-items-center rounded-pill ring-4 ring-surface ${
-                  state ? 'bg-forest text-white shadow-soft' : 'border-2 border-dashed border-border bg-surface text-muted'
+                  state
+                    ? 'bg-forest text-white shadow-soft'
+                    : 'border-2 border-dashed border-border bg-surface text-muted'
                 }`}
               >
                 <Icon size={26} strokeWidth={2.2} />
@@ -84,7 +86,8 @@ function Timeline({ application }: { application: Application }) {
             className="relative border-l-[3px] border-hairline pb-1 pl-5 before:absolute before:top-1.5 before:-left-[0.5625rem] before:size-3.5 before:rounded-pill before:border-[3px] before:border-surface before:bg-forest"
           >
             <p>
-              <span className="font-extrabold">{formatDate(entry.date)}</span> · {trackLabels[entry.track]}: {entry.label}
+              <span className="font-extrabold">{formatDate(entry.date)}</span> · {trackLabels[entry.track]}:{' '}
+              {entry.label}
             </p>
             <StatusBadge basis={entry.basis} />
             {entry.note && <p className="mt-1 text-small text-muted">{entry.note}</p>}
@@ -96,7 +99,9 @@ function Timeline({ application }: { application: Application }) {
 }
 
 function Funding({ student }: { student: Student }) {
-  const applications = useGrantlyStore((state) => state.applications).filter((application) => application.studentId === student.id)
+  const applications = useGrantlyStore((state) => state.applications).filter(
+    (application) => application.studentId === student.id,
+  )
   return (
     <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
       {applications.map((application) => (

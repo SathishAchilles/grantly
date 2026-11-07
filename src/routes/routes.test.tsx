@@ -34,7 +34,9 @@ describe('My funding plan', () => {
     renderRoute('/')
 
     const actions = await screen.findByRole('region', { name: 'Next actions' })
-    expect(within(actions).getByRole('heading', { name: 'Respond to the PM-USP correction request' })).toBeInTheDocument()
+    expect(
+      within(actions).getByRole('heading', { name: 'Respond to the PM-USP correction request' }),
+    ).toBeInTheDocument()
     expect(within(actions).queryByText(/Your part is done/)).not.toBeInTheDocument()
   })
 
@@ -44,7 +46,9 @@ describe('My funding plan', () => {
 
     const position = await screen.findByRole('region', { name: 'Your funding position, 2026-27' })
     expect(within(position).getByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹80,000')
-    expect(within(position).getByText(/Deccan Institute merit fee waiver/)).toHaveTextContent('(Reduces your college fee; not cash)')
+    expect(within(position).getByText(/Deccan Institute merit fee waiver/)).toHaveTextContent(
+      '(Reduces your college fee; not cash)',
+    )
     const actions = region('Next actions')
     expect(within(actions).getByText('Your part is done. Waiting on: Family.')).toBeInTheDocument()
     expect(within(actions).getByText('No published deadline')).toBeInTheDocument()
@@ -62,7 +66,14 @@ describe('My funding plan', () => {
   it('counts confirmed support and describes a fee reduction as not cash', async () => {
     const meera = required(store().students[0], 'Meera')
     useGrantlyStore.setState({
-      students: [{ ...meera, support: [{ id: 'c', label: 'College fee concession', amount: 20_000, kind: 'fee-reduction', state: 'confirmed' }] }],
+      students: [
+        {
+          ...meera,
+          support: [
+            { id: 'c', label: 'College fee concession', amount: 20_000, kind: 'fee-reduction', state: 'confirmed' },
+          ],
+        },
+      ],
     })
     renderRoute('/')
 
@@ -81,10 +92,11 @@ describe('My funding plan', () => {
     renderRoute('/')
 
     const actions = await screen.findByRole('region', { name: 'Next actions' })
-    expect(within(actions).getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent)).toEqual([
-      'Dated task',
-      'Undated task',
-    ])
+    expect(
+      within(actions)
+        .getAllByRole('heading', { level: 3 })
+        .map((heading) => heading.textContent),
+    ).toEqual(['Dated task', 'Undated task'])
 
     act(() => useGrantlyStore.setState({ tasks: [] }))
     expect(await screen.findByText('Nothing needs you right now.')).toBeInTheDocument()
@@ -111,7 +123,11 @@ describe('Opportunities', () => {
     renderRoute('/opportunities')
 
     const card = await screen.findByRole('region', { name: 'PM-USP CSSS' })
-    expect(within(card).getByText('Open for renewal applications only in 2026-27, so you cannot apply as a fresh applicant.')).toBeInTheDocument()
+    expect(
+      within(card).getByText(
+        'Open for renewal applications only in 2026-27, so you cannot apply as a fresh applicant.',
+      ),
+    ).toBeInTheDocument()
     expect(within(card).queryByRole('link', { name: /Check documents/ })).not.toBeInTheDocument()
     expect(within(card).getByText(/84% is a marks percentage, not a percentile/)).toBeInTheDocument()
     expect(within(card).getAllByText('More information needed').length).toBeGreaterThan(0)
@@ -127,7 +143,11 @@ describe('Opportunities', () => {
     expect(within(card).getByText('Sources disagree on the student deadline')).toBeInTheDocument()
     expect(within(card).getByText('31 Oct 2026 (passed)')).toBeInTheDocument()
     expect(within(card).getByText('30 Nov 2026')).toBeInTheDocument()
-    expect(within(card).getByText(/Act by 30 Nov 2026, the earliest date that has not passed\. Confirm with the NSP helpdesk/)).toBeInTheDocument()
+    expect(
+      within(card).getByText(
+        /Act by 30 Nov 2026, the earliest date that has not passed\. Confirm with the NSP helpdesk/,
+      ),
+    ).toBeInTheDocument()
   })
 
   it('shows published amounts with sources, and says when an amount is not published', async () => {
@@ -137,11 +157,17 @@ describe('Opportunities', () => {
     const hdfc = await screen.findByRole('region', { name: 'HDFC Parivartan ECSS' })
     expect(within(hdfc).getByText('Amount:', { exact: false })).toHaveTextContent('₹50,000 for your course level')
     expect(within(hdfc).getByText('Meets every listed condition we can check.')).toBeInTheDocument()
-    expect(within(hdfc).getByRole('link', { name: 'Check documents for HDFC Parivartan ECSS' })).toHaveAttribute('href', '/readiness')
+    expect(within(hdfc).getByRole('link', { name: 'Check documents for HDFC Parivartan ECSS' })).toHaveAttribute(
+      'href',
+      '/readiness',
+    )
 
     const ffe = region('FFE')
     expect(within(ffe).getByText('Amount: Not published by the provider')).toBeInTheDocument()
-    expect(within(ffe).getByRole('link', { name: /^Provider: FFE/ })).toHaveAttribute('href', 'https://ffe.org/scholarships/')
+    expect(within(ffe).getByRole('link', { name: /^Provider: FFE/ })).toHaveAttribute(
+      'href',
+      'https://ffe.org/scholarships/',
+    )
     expect(within(ffe).getByText(/FFE has not published a closing date/)).toBeInTheDocument()
     expect(within(ffe).getByText('Rule needs confirmation')).toBeInTheDocument()
 
@@ -152,7 +178,11 @@ describe('Opportunities', () => {
     renderRoute('/opportunities')
 
     const card = await screen.findByRole('region', { name: 'PM-USP CSSS' })
-    expect(within(card).getByText(/does not guarantee an award\. Department of Higher Education, Ministry of Education makes the decision\./)).toBeInTheDocument()
+    expect(
+      within(card).getByText(
+        /does not guarantee an award\. Department of Higher Education, Ministry of Education makes the decision\./,
+      ),
+    ).toBeInTheDocument()
     expect(within(card).getByText('Conditions for renewal applicants')).toBeInTheDocument()
     expect(within(card).getByText('68% in 2025-26.')).toBeInTheDocument()
   })
@@ -169,7 +199,9 @@ describe('Readiness', () => {
 
     const ffe = region('FFE')
     expect(within(ffe).getByText('Not accepted')).toBeInTheDocument()
-    expect(within(ffe).getByText('Your income certificate is not accepted here. You need salary slips.')).toBeInTheDocument()
+    expect(
+      within(ffe).getByText('Your income certificate is not accepted here. You need salary slips.'),
+    ).toBeInTheDocument()
     expect(within(ffe).getByText('Missing')).toBeInTheDocument()
     expect(within(ffe).getByText('1 of 3 documents ready')).toBeInTheDocument()
   })
@@ -180,7 +212,11 @@ describe('Readiness', () => {
     const documents = await screen.findByRole('region', { name: 'Your documents' })
     expect(within(documents).getByText('Enrolment letter, 2025-26')).toBeInTheDocument()
     expect(within(documents).getByText('Bank passbook')).toBeInTheDocument()
-    expect(within(region('HDFC Parivartan ECSS')).getByText(/Ask Lakeview Arts and Science College for one covering 2026-27/)).toBeInTheDocument()
+    expect(
+      within(region('HDFC Parivartan ECSS')).getByText(
+        /Ask Lakeview Arts and Science College for one covering 2026-27/,
+      ),
+    ).toBeInTheDocument()
     expect(within(region('PM-USP CSSS')).getByText('1 of 1 documents ready')).toBeInTheDocument()
   })
 })
@@ -201,7 +237,11 @@ describe('Applications and the caseworker', () => {
     renderRoute('/applications')
 
     const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
-    expect(within(caseworker).getByText('Reads a notice from a portal, email or letter and turns it into one task, using fixed rules.')).toBeInTheDocument()
+    expect(
+      within(caseworker).getByText(
+        'Reads a notice from a portal, email or letter and turns it into one task, using fixed rules.',
+      ),
+    ).toBeInTheDocument()
     expect(within(caseworker).getByRole('button', { name: 'Read notice' })).toBeDisabled()
   })
 
@@ -218,16 +258,23 @@ describe('Applications and the caseworker', () => {
 
     await user.click(within(caseworker).getByRole('button', { name: 'Confirm' }))
 
-    expect(within(caseworker).getByRole('status')).toHaveTextContent('Task created: Issue an enrolment letter for 2026-27.')
+    expect(within(caseworker).getByRole('status')).toHaveTextContent(
+      'Task created: Issue an enrolment letter for 2026-27.',
+    )
     expect(store().tasks).toHaveLength(5)
-    expect(within(region('PM-USP CSSS, 2026-27')).getByRole('definition', { name: 'Who acts next' })).toHaveTextContent('College')
+    expect(within(region('PM-USP CSSS, 2026-27')).getByRole('definition', { name: 'Who acts next' })).toHaveTextContent(
+      'College',
+    )
   })
 
   it('does not guess at an unrecognised notice, and shows text as plain text', async () => {
     const { user } = renderRoute('/applications')
     const caseworker = await screen.findByRole('region', { name: 'Caseworker' })
 
-    await user.type(within(caseworker).getByRole('textbox', { name: 'Notice text' }), '<img src=x onerror=alert(1)> please call us')
+    await user.type(
+      within(caseworker).getByRole('textbox', { name: 'Notice text' }),
+      '<img src=x onerror=alert(1)> please call us',
+    )
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
 
     expect(within(caseworker).getByText(/I will not guess/)).toBeInTheDocument()
@@ -258,7 +305,10 @@ describe('Applications and the caseworker', () => {
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
     await user.click(within(caseworker).getByRole('button', { name: 'Confirm' }))
 
-    expect(store().tasks.at(-1)).toMatchObject({ applicationId: 'arjun-ffe-2026', title: 'Add your income certificate' })
+    expect(store().tasks.at(-1)).toMatchObject({
+      applicationId: 'arjun-ffe-2026',
+      title: 'Add your income certificate',
+    })
     expect(within(region('FFE, 2026-27')).getByText('None published')).toBeInTheDocument()
   })
 
@@ -271,7 +321,9 @@ describe('Applications and the caseworker', () => {
     await user.click(within(caseworker).getByRole('button', { name: 'Read notice' }))
 
     expect(within(caseworker).getAllByRole('listitem')).toHaveLength(1)
-    expect(await within(caseworker).findByText('Your enrolment letter is for 2025-26, not 2026-27.')).toBeInTheDocument()
+    expect(
+      await within(caseworker).findByText('Your enrolment letter is for 2025-26, not 2026-27.'),
+    ).toBeInTheDocument()
   })
 
   it('says when there are no applications this year', async () => {
@@ -306,7 +358,9 @@ describe('Funding and renewal', () => {
     renderRoute('/funding')
 
     const thisYear = await screen.findByRole('region', { name: 'PM-USP CSSS, 2026-27' })
-    const entries = within(thisYear).getAllByRole('listitem').filter((item) => item.textContent.includes('Application:'))
+    const entries = within(thisYear)
+      .getAllByRole('listitem')
+      .filter((item) => item.textContent.includes('Application:'))
     expect(entries.map((entry) => entry.textContent)).toEqual([
       expect.stringContaining('Correction required'),
       expect.stringContaining('Submitted'),
@@ -320,7 +374,9 @@ describe('College desk', () => {
     as('priya')
     const { container } = renderRoute('/college')
 
-    expect(await screen.findByText(/Priya Nair, Scholarship coordinator, Lakeview Arts and Science College/)).toBeInTheDocument()
+    expect(
+      await screen.findByText(/Priya Nair, Scholarship coordinator, Lakeview Arts and Science College/),
+    ).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: 'Waiting on your college' })).toBeInTheDocument()
     expect(await axeViolations(container)).toEqual([])
     expect(screen.getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent)).toEqual([
@@ -388,7 +444,9 @@ describe('Full correction journey', () => {
     await user.selectOptions(screen.getByRole('combobox', { name: 'Viewing as' }), 'Meera Krishnan, student')
     await user.click(screen.getByRole('link', { name: 'Readiness' }))
     const documents = await screen.findByRole('region', { name: 'Your documents' })
-    const letter = within(documents).getAllByRole('listitem').find((item) => item.textContent.includes('Enrolment letter, 2026-27'))
+    const letter = within(documents)
+      .getAllByRole('listitem')
+      .find((item) => item.textContent.includes('Enrolment letter, 2026-27'))
     expect(letter).toHaveTextContent('Confirmed by college staff')
 
     await user.click(screen.getByRole('link', { name: 'Applications' }))

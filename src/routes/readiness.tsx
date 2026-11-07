@@ -15,7 +15,10 @@ function ProgrammeReadiness({ scheme, student }: { scheme: Scheme; student: Stud
   return (
     <Card aria-labelledby={headingId}>
       <div className="flex items-start gap-4">
-        <span aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-peach text-ink">
+        <span
+          aria-hidden="true"
+          className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-peach text-ink"
+        >
           <FolderCheck size={26} strokeWidth={2.2} />
         </span>
         <div className="min-w-0 flex-1">
@@ -60,8 +63,14 @@ function Readiness({ student }: { student: Student }) {
         </h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {student.documents.map((doc) => (
-            <li key={doc.id} className="flex items-start gap-3 rounded-card border border-hairline bg-surface p-4 shadow-soft">
-              <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-control bg-forest-soft text-forest-deep">
+            <li
+              key={doc.id}
+              className="flex items-start gap-3 rounded-card border border-hairline bg-surface p-4 shadow-soft"
+            >
+              <span
+                aria-hidden="true"
+                className="grid size-10 shrink-0 place-items-center rounded-control bg-forest-soft text-forest-deep"
+              >
                 <FileText size={22} strokeWidth={2.2} />
               </span>
               <div className="min-w-0">
@@ -88,7 +97,10 @@ function Readiness({ student }: { student: Student }) {
 /** The readiness page: the student's documents checked against each programme's own rules, including accepted alternatives. */
 export function Component() {
   return (
-    <StudentOnly title="Readiness" purpose="Check your documents against each programme's own rules, including accepted alternatives.">
+    <StudentOnly
+      title="Readiness"
+      purpose="Check your documents against each programme's own rules, including accepted alternatives."
+    >
       {(student) => <Readiness student={student} />}
     </StudentOnly>
   )

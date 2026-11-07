@@ -34,7 +34,10 @@ export function parseAmount(text: string): number | null {
 
 /** Reads the first date written as "20 Nov 2026", returning YYYY-MM-DD. */
 export function parseDate(text: string): string | null {
-  const groups = /\b(?<day>\d{1,2}) (?<month>jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* (?<year>\d{4})\b/i.exec(text)?.groups
+  const groups =
+    /\b(?<day>\d{1,2}) (?<month>jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* (?<year>\d{4})\b/i.exec(
+      text,
+    )?.groups
   if (!groups) return null
   const { day, month, year } = groups as Record<'day' | 'month' | 'year', string>
   return `${year}-${String(months.indexOf(month.toLowerCase()) + 1).padStart(2, '0')}-${day.padStart(2, '0')}`
@@ -59,7 +62,8 @@ export function readEmail(email: Email, student: Student, applications: Applicat
     return {
       kind: 'suspicious',
       email,
-      summary: 'Asks you to pay to get a scholarship. Applying on the National Scholarship Portal is free, so treat this as a likely scam.',
+      summary:
+        'Asks you to pay to get a scholarship. Applying on the National Scholarship Portal is free, so treat this as a likely scam.',
     }
   }
   if (!scholarshipWords.test(text)) return { kind: 'ignored', email, summary: 'Not about your scholarships.' }
@@ -152,7 +156,10 @@ export function readEmail(email: Email, student: Student, applications: Applicat
 
     if (/enrolment letter/.test(text) && /ready|issued/.test(text)) {
       const open = tasks.find(
-        (task) => task.applicationId === application.id && task.status !== 'completed' && task.fulfils?.type === 'enrolment-letter',
+        (task) =>
+          task.applicationId === application.id &&
+          task.status !== 'completed' &&
+          task.fulfils?.type === 'enrolment-letter',
       )
       return {
         kind: 'update',
@@ -176,7 +183,10 @@ export function readEmail(email: Email, student: Student, applications: Applicat
       }
     }
 
-    if (interpretNotice(text).kind === 'enrolment-evidence' && application.tracks.application.label === 'Correction required') {
+    if (
+      interpretNotice(text).kind === 'enrolment-evidence' &&
+      application.tracks.application.label === 'Correction required'
+    ) {
       return { kind: 'up-to-date', email, summary: `${name} already shows this correction request.` }
     }
   }

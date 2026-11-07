@@ -28,6 +28,9 @@ test("Arjun's application emails update his status, tasks and gap after he confi
   await expect(hdfc.getByText('Supported by evidence')).toBeVisible()
 
   await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'My funding plan' }).click()
-  await page.getByRole('region', { name: 'Application emails' }).getByRole('button', { name: 'Fetch application emails' }).click()
+  await page
+    .getByRole('region', { name: 'Application emails' })
+    .getByRole('button', { name: 'Fetch application emails' })
+    .click()
   await expect(page.getByText('No new application emails.')).toBeVisible()
 })

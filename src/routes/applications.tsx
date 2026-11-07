@@ -65,7 +65,9 @@ function ApplicationCard({ application }: { application: Application }) {
           }
         >
           {application.deadline ? formatDate(application.deadline) : 'None published'}
-          {application.deadlineNote && <span className="mt-0.5 block text-small text-muted">{application.deadlineNote}</span>}
+          {application.deadlineNote && (
+            <span className="mt-0.5 block text-small text-muted">{application.deadlineNote}</span>
+          )}
         </Fact>
       </dl>
       {application.notice && (
@@ -85,7 +87,12 @@ function Applications({ student }: { student: Student }) {
   const all = useGrantlyStore((state) => state.applications)
   const mine = all.filter((application) => application.studentId === student.id)
   const [first, ...rest] = mine.filter((application) => application.academicYear === '2026-27')
-  if (!first) return <p className="rounded-card border border-hairline bg-surface p-5 shadow-soft">No applications for 2026-27 yet. Start from Opportunities.</p>
+  if (!first)
+    return (
+      <p className="rounded-card border border-hairline bg-surface p-5 shadow-soft">
+        No applications for 2026-27 yet. Start from Opportunities.
+      </p>
+    )
   const active: [Application, ...Application[]] = [first, ...rest]
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
@@ -102,7 +109,10 @@ function Applications({ student }: { student: Student }) {
 /** The applications page: what is missing on each application, who acts next, and notices turned into a single task. */
 export function Component() {
   return (
-    <StudentOnly title="Applications" purpose="Know what is missing, who has to act next, and turn confusing notices into one clear task.">
+    <StudentOnly
+      title="Applications"
+      purpose="Know what is missing, who has to act next, and turn confusing notices into one clear task."
+    >
       {(student) => <Applications student={student} />}
     </StudentOnly>
   )

@@ -62,7 +62,10 @@ export function studentDeadline(scheme: Scheme, today: string): StudentDeadline 
   const [first] = options
   if (!first) return { status: 'none', note: scheme.noDeadlineNote ?? 'No closing date has been published.' }
   if (new Set(options.map((option) => option.date)).size === 1) return { status: 'single', option: first }
-  const open = options.filter((option) => !option.passed).map((option) => option.date).sort()
+  const open = options
+    .filter((option) => !option.passed)
+    .map((option) => option.date)
+    .sort()
   return { status: 'conflict', options, recommended: open[0] ?? null }
 }
 

@@ -24,7 +24,9 @@ describe('Shell', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('Scheme rules, amounts and deadlines link to their official sources.')
+    expect(screen.getByRole('contentinfo')).toHaveTextContent(
+      'Scheme rules, amounts and deadlines link to their official sources.',
+    )
   })
 
   it('makes the skip link the first focusable element, pointing at main', async () => {

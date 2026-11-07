@@ -38,7 +38,11 @@ function Amount({ scheme, student }: { scheme: Scheme; student: Student }) {
     <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <Wallet aria-hidden="true" size={18} className="shrink-0 text-forest" />
       <span>
-        Amount: <strong><Money amount={amount.value} /></strong> {amount.basis}
+        Amount:{' '}
+        <strong>
+          <Money amount={amount.value} />
+        </strong>{' '}
+        {amount.basis}
       </span>
       <SourceLink source={amount.source} />
     </p>
@@ -53,7 +57,10 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
   return (
     <Card aria-labelledby={headingId} className="flex flex-col">
       <div className="flex items-start gap-4">
-        <span aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-peach text-ink">
+        <span
+          aria-hidden="true"
+          className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-peach text-ink"
+        >
           <GraduationCap size={26} strokeWidth={2.2} />
         </span>
         <div className="min-w-0">
@@ -82,7 +89,11 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
       </dl>
 
       <div className="mt-5 space-y-3">
-        <p className={evaluation.open ? 'font-semibold' : 'rounded-control bg-rust-soft px-3 py-2 font-extrabold text-rust'}>
+        <p
+          className={
+            evaluation.open ? 'font-semibold' : 'rounded-control bg-rust-soft px-3 py-2 font-extrabold text-rust'
+          }
+        >
           {evaluation.availability}
         </p>
         <Amount scheme={scheme} student={student} />
@@ -140,7 +151,10 @@ function Opportunities({ student }: { student: Student }) {
 /** The opportunities page: which schemes fit the student, condition by condition, with the official source for each. */
 export function Component() {
   return (
-    <StudentOnly title="Opportunities" purpose="See which schemes fit, condition by condition, with the official source for each.">
+    <StudentOnly
+      title="Opportunities"
+      purpose="See which schemes fit, condition by condition, with the official source for each."
+    >
       {(student) => <Opportunities student={student} />}
     </StudentOnly>
   )

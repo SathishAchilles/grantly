@@ -60,7 +60,9 @@ describe('Application emails', () => {
     expect(screen.getByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹60,000')
     expect(screen.getByRole('heading', { name: 'Confirmed support' })).toBeInTheDocument()
     const actions = screen.getByRole('region', { name: 'Next actions' })
-    expect(within(actions).getByRole('article', { name: 'Attend the HDFC Parivartan ECSS interview' })).toHaveTextContent('20 Nov 2026')
+    expect(
+      within(actions).getByRole('article', { name: 'Attend the HDFC Parivartan ECSS interview' }),
+    ).toHaveTextContent('20 Nov 2026')
   })
 
   it('does not offer applied emails again', async () => {
@@ -85,7 +87,11 @@ describe('Application emails', () => {
     await user.click(within(panel).getByRole('button', { name: 'Apply updates' }))
 
     expect(within(panel).getByRole('status')).toHaveTextContent('Applied 1 update.')
-    expect(store().students[0]?.documents.at(-1)).toMatchObject({ type: 'enrolment-letter', academicYear: '2026-27', basis: 'evidence' })
+    expect(store().students[0]?.documents.at(-1)).toMatchObject({
+      type: 'enrolment-letter',
+      academicYear: '2026-27',
+      basis: 'evidence',
+    })
   })
 
   it('shows no apply action when nothing would change', async () => {

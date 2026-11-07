@@ -42,7 +42,9 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run lint && npm test && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@fontsource-variable/nunito": "5.3.0",
@@ -75,6 +77,7 @@
     "eslint-plugin-testing-library": "7.16.2",
     "globals": "17.14.0",
     "jsdom": "31.0.0",
+    "prettier": "3.6.2",
     "tailwindcss": "4.3.5",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",

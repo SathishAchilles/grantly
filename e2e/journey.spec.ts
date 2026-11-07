@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const viewAs = (page: Page, label: string) =>
-  page.getByRole('combobox', { name: 'Viewing as' }).selectOption({ label })
+const viewAs = (page: Page, label: string) => page.getByRole('combobox', { name: 'Viewing as' }).selectOption({ label })
 
 const go = (page: Page, area: string) =>
   page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: area }).click()
@@ -16,8 +15,12 @@ async function runDemo(page: Page) {
   await expect(pmUsp.getByText('Sources disagree on the student deadline')).toBeVisible()
 
   await go(page, 'Readiness')
-  await expect(page.getByRole('region', { name: 'HDFC Parivartan ECSS' }).getByText('Ready with an accepted alternative')).toBeVisible()
-  await expect(page.getByRole('region', { name: 'FFE' }).getByText('You need salary slips.', { exact: false })).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'HDFC Parivartan ECSS' }).getByText('Ready with an accepted alternative'),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'FFE' }).getByText('You need salary slips.', { exact: false }),
+  ).toBeVisible()
 
   // Meera: a returned renewal becomes one college task.
   await viewAs(page, 'Meera Krishnan, student')
@@ -31,7 +34,10 @@ async function runDemo(page: Page) {
   // Priya: the college issues the letter.
   await viewAs(page, 'Priya Nair, college coordinator')
   await go(page, 'College desk')
-  await page.getByRole('article', { name: 'Issue an enrolment letter for 2026-27' }).getByRole('button', { name: 'Mark complete' }).click()
+  await page
+    .getByRole('article', { name: 'Issue an enrolment letter for 2026-27' })
+    .getByRole('button', { name: 'Mark complete' })
+    .click()
 
   // Meera: attaches the college-confirmed letter and resubmits.
   await viewAs(page, 'Meera Krishnan, student')
@@ -59,6 +65,8 @@ test('the full demo runs, resets, and runs again the same way', async ({ page })
   await expect(page.getByRole('status').filter({ hasText: 'Progress cleared.' })).toBeVisible()
 
   await go(page, 'My funding plan')
-  await expect(page.getByRole('region', { name: 'Your funding position, 2026-27' })).toContainText('Still to find₹30,000')
+  await expect(page.getByRole('region', { name: 'Your funding position, 2026-27' })).toContainText(
+    'Still to find₹30,000',
+  )
   await runDemo(page)
 })

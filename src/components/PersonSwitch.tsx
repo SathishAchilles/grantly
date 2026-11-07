@@ -20,9 +20,7 @@ export function PersonSwitch() {
             {student.name}, student
           </option>
         ))}
-        <option value={priya.id}>
-          {priya.name}, college coordinator
-        </option>
+        <option value={priya.id}>{priya.name}, college coordinator</option>
       </select>
     </label>
   )

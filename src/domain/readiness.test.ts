@@ -64,7 +64,9 @@ describe('evaluateReadiness', () => {
   })
 
   it('shows only the evidence for the applicant type', () => {
-    expect(evaluateReadiness(pmUspCsss, renewalStudent()).map((result) => result.requirement.id)).toEqual(['previous-year-marksheet'])
+    expect(evaluateReadiness(pmUspCsss, renewalStudent()).map((result) => result.requirement.id)).toEqual([
+      'previous-year-marksheet',
+    ])
     expect(evaluateReadiness(pmUspCsss, freshStudent()).map((result) => result.requirement.id)).toEqual([
       'class-12-marksheet',
       'income-certificate',
