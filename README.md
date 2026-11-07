@@ -1,6 +1,6 @@
 # Grantly
 
-![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178c6) ![Coverage 100%](https://img.shields.io/badge/coverage-100%25-2ea44f) ![axe 0 violations](https://img.shields.io/badge/axe-0%20violations-2ea44f) ![Lighthouse 98-100](https://img.shields.io/badge/Lighthouse-98--100-2ea44f) ![License MIT](https://img.shields.io/badge/license-MIT-blue)
+![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178c6) ![Coverage 100%](https://img.shields.io/badge/coverage-100%25-2ea44f) ![axe 0 violations](https://img.shields.io/badge/axe-0%20violations-2ea44f) ![Lighthouse 98-100](https://img.shields.io/badge/Lighthouse-98--100-2ea44f) ![CI](https://github.com/SathishAchilles/grantly/actions/workflows/ci.yml/badge.svg) ![License MIT](https://img.shields.io/badge/license-MIT-blue)
 
 Grantly helps students in India turn scholarship opportunities into usable education funding. It answers three questions: what can I pursue, what is missing, and who has to act next. It was built for The Outpost, a 6-hour solo frontend hackathon.
 
@@ -50,7 +50,8 @@ The Gmail connection is simulated. Grantly does not sign in to Google or read a 
 
 ```
 src/
-  app/          Shell, router, navigation areas, active-person hook
+  app/          Shell, router and navigation areas
+  hooks/        Shared React hooks (active person)
   routes/       One lazy-loaded page per area, plus not-found and error pages
   components/   Presentational UI (cards, badges, caseworker, email panel)
   domain/       Pure TypeScript rules: eligibility, readiness, funding, email, caseworker, dates
@@ -62,7 +63,7 @@ e2e/            Playwright specs
 docs/           Architecture notes and screenshots
 ```
 
-Data flows one way: `data` → `domain` (pure functions) → `store` → `routes` and `components`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Data flows one way: `data` → `domain` (pure functions) → `store` → `routes` and `components`. Imports use the `@/` alias for `src/`. Saved progress is validated before it is loaded, so edited or outdated data falls back to the starting state. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Getting started
 

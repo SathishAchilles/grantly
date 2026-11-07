@@ -6,7 +6,8 @@ Grantly is a client-side single-page app. There is no backend: data lives in typ
 
 ```
 src/
-  app/          Shell, routing, navigation and the active-person hook
+  app/          Shell, routing and navigation
+  hooks/        Shared React hooks
   routes/       One lazy-loaded page per area, plus not-found and error pages
   components/   Reusable presentational components (cards, badges, panels)
   domain/       Pure, framework-free business logic and types
@@ -17,7 +18,7 @@ src/
 e2e/            Playwright end-to-end, accessibility and security tests
 ```
 
-Dependencies point one way: `routes` → `components` → `store` → `domain` ← `data`. Domain code never imports React, and components never contain business rules.
+Imports use the `@/` alias for `src/`. Dependencies point one way: `routes` → `components` → `store` → `domain` ← `data`. Domain code never imports React, and components never contain business rules.
 
 ## Domain modules
 
@@ -33,7 +34,7 @@ Dependencies point one way: `routes` → `components` → `store` → `domain` �
 
 ## State
 
-`store/useGrantlyStore.ts` holds people, applications, tasks and processed emails. Every change goes through a named action (`setTaskStatus`, `confirmCaseworkerAction`, `applyEmailUpdates`, `reset`), and nothing changes until the user confirms. State is persisted with a version number so older saved state is discarded safely.
+`store/useGrantlyStore.ts` holds people, applications, tasks and processed emails. Every change goes through a named action (`setTaskStatus`, `confirmCaseworkerAction`, `applyEmailUpdates`, `reset`), and nothing changes until the user confirms. State is persisted with a version number: older versions are discarded, and `isGrantlyData` validates the shape, people and scheme ids of saved data before it is merged, so corrupted or edited `localStorage` falls back to the starting state.
 
 ## Routing
 
