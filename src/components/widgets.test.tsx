@@ -44,12 +44,11 @@ describe('DeadlineView', () => {
     expect(screen.getByText(/\(passed\)/)).toBeInTheDocument()
   })
 
-  it('says when every conflicting date has passed, and who can confirm', () => {
+  it('says every conflicting date has passed without suggesting a date, and who can confirm', () => {
     render(
       <DeadlineView
         deadline={{
           status: 'conflict',
-          recommended: null,
           options: [
             { date: '2026-10-31', source: sources.nspAnnouncement, passed: true },
             { date: '2026-11-01', source: sources.nspCatalogue, passed: true },
@@ -58,7 +57,8 @@ describe('DeadlineView', () => {
         confirmWith="the provider"
       />,
     )
-    expect(screen.getByText(/Every listed date has passed\. Confirm with the provider\./)).toBeInTheDocument()
+    expect(screen.getByText(/Official sources disagree.*Confirm the date with the provider\./)).toBeInTheDocument()
+    expect(screen.queryByText(/precaution/)).not.toBeInTheDocument()
   })
 })
 

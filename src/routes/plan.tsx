@@ -4,11 +4,12 @@ import { EmailSync } from '@/components/EmailSync'
 import { Fact } from '@/components/Fact'
 import { GapBar, Swatch } from '@/components/GapBar'
 import { Money } from '@/components/Money'
+import { ButtonLink } from '@/components/Button'
 import { StudentOnly } from '@/components/StudentOnly'
 import { TaskCard } from '@/components/TaskCard'
-import { fundingSummary, supportKindLabel } from '@/domain/funding'
+import { fundingSummary, supportKindLabel, taskDestination } from '@/domain/funding'
 import { byDeadline } from '@/domain/dates'
-import type { Student, SupportItem } from '@/domain/types'
+import type { Application, Student, SupportItem, Task } from '@/domain/types'
 import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 interface SupportListProps {
@@ -28,7 +29,9 @@ function SupportList({ items, icon: Icon, tone }: SupportListProps) {
           <span className="flex min-w-0 flex-1 items-baseline justify-between gap-x-4">
             <span className="min-w-0 flex-1 font-semibold">
               {item.label}{' '}
-              <span className="block text-small font-normal text-muted">({supportKindLabel[item.kind]})</span>
+              <span className="block text-small font-normal text-muted">
+                How it is paid: {supportKindLabel[item.kind]}
+              </span>
             </span>
             <span className="shrink-0 font-extrabold">
               <Money amount={item.amount} />
@@ -40,9 +43,32 @@ function SupportList({ items, icon: Icon, tone }: SupportListProps) {
   )
 }
 
+interface NextActionProps {
+  task: Task
+  application: Application | undefined
+  featured: boolean
+}
+
+function NextAction({ task, application, featured }: NextActionProps) {
+  const { to, label } = taskDestination(task, application)
+  return (
+    <TaskCard task={task} viewer="student" featured={featured}>
+      <ButtonLink
+        to={to}
+        variant={featured ? 'primary' : 'secondary'}
+        className="mt-4"
+        aria-label={`${label} for ${task.title}`}
+      >
+        {label}
+      </ButtonLink>
+    </TaskCard>
+  )
+}
+
 function FundingPlan({ student }: { student: Student }) {
   const summary = fundingSummary(student)
   const tasks = useGrantlyStore((state) => state.tasks)
+  const applications = useGrantlyStore((state) => state.applications)
   const open = tasks.filter((task) => task.studentId === student.id && task.status !== 'completed').sort(byDeadline)
 
   return (
@@ -61,7 +87,12 @@ function FundingPlan({ student }: { student: Student }) {
           ) : (
             <div className="mt-4 space-y-4">
               {open.map((task, index) => (
-                <TaskCard key={task.id} task={task} viewer="student" featured={index === 0} />
+                <NextAction
+                  key={task.id}
+                  task={task}
+                  application={applications.find((application) => application.id === task.applicationId)}
+                  featured={index === 0}
+                />
               ))}
             </div>
           )}
@@ -74,6 +105,10 @@ function FundingPlan({ student }: { student: Student }) {
           <div className="mt-5">
             <GapBar summary={summary} />
           </div>
+          <p className="mt-3 text-small text-muted">
+            Only confirmed support reduces the gap. Potential, awarded or initiated amounts stay pending until they are
+            confirmed as received.
+          </p>
           <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-1">
             <Fact label="Costs this year" termClassName="px-3 py-1.5" valueClassName="px-3 py-1.5 text-right font-bold">
               <Money amount={summary.costs} />

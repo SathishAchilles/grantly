@@ -26,7 +26,9 @@ describe('My funding plan', () => {
     const position = await screen.findByRole('region', { name: 'Your funding position, 2026-27' })
     expect(within(position).getByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹30,000')
     expect(within(position).getByRole('heading', { name: 'Pending, not counted in your gap' })).toBeInTheDocument()
-    expect(within(position).getByText(/PM-USP CSSS renewal, 2026-27/)).toHaveTextContent('(Paid to you)')
+    expect(within(position).getByText(/PM-USP CSSS renewal, 2026-27/)).toHaveTextContent(
+      'How it is paid: Will be paid to your bank account',
+    )
     expect(within(position).getByText('₹12,000')).toBeInTheDocument()
   })
 
@@ -47,11 +49,48 @@ describe('My funding plan', () => {
     const position = await screen.findByRole('region', { name: 'Your funding position, 2026-27' })
     expect(within(position).getByRole('definition', { name: 'Still to find' })).toHaveTextContent('₹80,000')
     expect(within(position).getByText(/Deccan Institute merit fee waiver/)).toHaveTextContent(
-      '(Reduces your college fee; not cash)',
+      'How it is paid: Reduces your college fee; not cash',
     )
     const actions = region('Next actions')
     expect(within(actions).getByText('Your part is done. Waiting on: Family.')).toBeInTheDocument()
     expect(within(actions).getByText('No published deadline')).toBeInTheDocument()
+  })
+
+  it('links each next action to the workflow that resolves it', async () => {
+    renderRoute('/')
+    const meeraActions = await screen.findByRole('region', { name: 'Next actions' })
+    expect(
+      within(meeraActions).getByRole('link', {
+        name: 'Open applications for Respond to the PM-USP correction request',
+      }),
+    ).toHaveAttribute('href', '/applications')
+  })
+
+  it("sends Arjun's document task to readiness for its scheme and a college task to the college desk", async () => {
+    as('arjun')
+    renderRoute('/')
+    const actions = await screen.findByRole('region', { name: 'Next actions' })
+    expect(
+      within(actions).getByRole('link', {
+        name: 'Check documents in readiness for Get 3 months of salary slips, certified by the employer',
+      }),
+    ).toHaveAttribute('href', '/readiness?scheme=ffe')
+
+    act(() =>
+      useGrantlyStore.setState({
+        tasks: store().tasks.map((task) => (task.studentId === 'arjun' ? { ...task, owner: 'institution' } : task)),
+      }),
+    )
+    expect(
+      await within(actions).findByRole('link', { name: /^Open the college desk for Get 3 months/ }),
+    ).toHaveAttribute('href', '/college')
+  })
+
+  it('explains that only confirmed support reduces the gap', async () => {
+    renderRoute('/')
+
+    const position = await screen.findByRole('region', { name: 'Your funding position, 2026-27' })
+    expect(within(position).getByText(/Only confirmed support reduces the gap/)).toBeInTheDocument()
   })
 
   it('says when there is no support at all', async () => {
@@ -135,7 +174,7 @@ describe('Opportunities', () => {
     expect(within(card).getByText('Amount:', { exact: false })).toHaveTextContent('₹12,000 a year at graduation level')
   })
 
-  it('shows both NSP deadlines, marks the passed one, and advises acting by 30 Nov', async () => {
+  it('shows both NSP deadlines, marks the passed one, and does not pick a deadline', async () => {
     as('arjun')
     renderRoute('/opportunities')
 
@@ -145,9 +184,10 @@ describe('Opportunities', () => {
     expect(within(card).getByText('30 Nov 2026')).toBeInTheDocument()
     expect(
       within(card).getByText(
-        /Act by 30 Nov 2026, the earliest date that has not passed\. Confirm with the NSP helpdesk/,
+        /Official sources disagree, so no single deadline is confirmed\. Confirm the date with the NSP helpdesk/,
       ),
     ).toBeInTheDocument()
+    expect(within(card).getByText(/As a precaution only, plan to finish by 30 Nov 2026/)).toBeInTheDocument()
   })
 
   it('shows published amounts with sources, and says when an amount is not published', async () => {
@@ -195,7 +235,7 @@ describe('Readiness', () => {
 
     const hdfc = await screen.findByRole('region', { name: 'HDFC Parivartan ECSS' })
     expect(within(hdfc).getByText('Ready with an accepted alternative')).toBeInTheDocument()
-    expect(within(hdfc).getByText('4 of 4 documents ready')).toBeInTheDocument()
+    expect(within(hdfc).getByText('4 of 4 required documents ready')).toBeInTheDocument()
 
     const ffe = region('FFE')
     expect(within(ffe).getByText('Not accepted')).toBeInTheDocument()
@@ -203,7 +243,7 @@ describe('Readiness', () => {
       within(ffe).getByText('Your income certificate is not accepted here. You need salary slips.'),
     ).toBeInTheDocument()
     expect(within(ffe).getByText('Missing')).toBeInTheDocument()
-    expect(within(ffe).getByText('1 of 3 documents ready')).toBeInTheDocument()
+    expect(within(ffe).getByText('1 of 3 required documents ready')).toBeInTheDocument()
   })
 
   it("lists Meera's documents and sends her to the issuer for an outdated letter", async () => {
@@ -217,7 +257,7 @@ describe('Readiness', () => {
         /Ask Lakeview Arts and Science College for one covering 2026-27/,
       ),
     ).toBeInTheDocument()
-    expect(within(region('PM-USP CSSS')).getByText('1 of 1 documents ready')).toBeInTheDocument()
+    expect(within(region('PM-USP CSSS')).getByText('1 of 1 required documents ready')).toBeInTheDocument()
   })
 })
 

@@ -103,10 +103,15 @@ function Funding({ student }: { student: Student }) {
     (application) => application.studentId === student.id,
   )
   return (
-    <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-      {applications.map((application) => (
-        <Timeline key={application.id} application={application} />
-      ))}
+    <div className="space-y-6">
+      <p className="text-muted">
+        An award is not money received: award, payment and renewal are tracked as separate steps below.
+      </p>
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        {applications.map((application) => (
+          <Timeline key={application.id} application={application} />
+        ))}
+      </div>
     </div>
   )
 }
