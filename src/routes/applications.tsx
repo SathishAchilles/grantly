@@ -1,3 +1,4 @@
+import { CalendarClock, Footprints, Mail, MapPin, UserRoundCheck } from 'lucide-react'
 import { Card } from '../components/Card'
 import { Caseworker } from '../components/Caseworker'
 import { Fact } from '../components/Fact'
@@ -9,31 +10,70 @@ import { formatDate } from '../domain/dates'
 import type { Application, Student } from '../domain/types'
 import { useGrantlyStore } from '../store/useGrantlyStore'
 
+const step = 'relative min-h-12 pt-3 pl-16 font-extrabold'
+const stepValue = 'pb-5 pl-16 last:pb-0'
+const stepIcon = 'absolute top-0 left-0 grid size-12 place-items-center rounded-pill ring-4 ring-surface'
+
 function ApplicationCard({ application }: { application: Application }) {
   const scheme = schemeById(application.schemeId)
   const status = application.tracks.application
   const headingId = `application-${application.id}`
   return (
     <Card aria-labelledby={headingId}>
-      <h2 id={headingId} className="text-title font-semibold">
+      <h2 id={headingId} className="text-title font-extrabold">
         {scheme.shortName}, {application.academicYear}
       </h2>
-      <p className="mt-1 flex flex-wrap items-center gap-x-3">
-        <strong>{status.label}</strong>
+      <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-control bg-paper px-4 py-3">
+        <MapPin aria-hidden="true" size={20} strokeWidth={2.4} className="shrink-0 text-forest" />
+        <strong className="text-lg">{status.label}</strong>
         <StatusBadge basis={status.basis} />
       </p>
-      <dl className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-[auto_1fr]">
-        <Fact label="Who acts next">{ownerLabel[application.owner]}</Fact>
-        <Fact label="Next step">{application.nextAction}</Fact>
-        <Fact label="Deadline">
+      <dl className="relative mt-5 before:absolute before:top-6 before:bottom-6 before:left-[1.4375rem] before:w-[3px] before:rounded-pill before:bg-hairline">
+        <Fact
+          label="Who acts next"
+          termClassName={step}
+          valueClassName={stepValue}
+          icon={
+            <span aria-hidden="true" className={`${stepIcon} bg-forest-soft text-forest-deep`}>
+              <UserRoundCheck size={24} strokeWidth={2.2} />
+            </span>
+          }
+        >
+          {ownerLabel[application.owner]}
+        </Fact>
+        <Fact
+          label="Next step"
+          termClassName={step}
+          valueClassName={stepValue}
+          icon={
+            <span aria-hidden="true" className={`${stepIcon} bg-marigold text-ink`}>
+              <Footprints size={24} strokeWidth={2.2} />
+            </span>
+          }
+        >
+          {application.nextAction}
+        </Fact>
+        <Fact
+          label="Deadline"
+          termClassName={step}
+          valueClassName={stepValue}
+          icon={
+            <span aria-hidden="true" className={`${stepIcon} bg-blue-soft text-blue`}>
+              <CalendarClock size={24} strokeWidth={2.2} />
+            </span>
+          }
+        >
           {application.deadline ? formatDate(application.deadline) : 'None published'}
-          {application.deadlineNote && <span className="block text-small text-muted">{application.deadlineNote}</span>}
+          {application.deadlineNote && <span className="mt-0.5 block text-small text-muted">{application.deadlineNote}</span>}
         </Fact>
       </dl>
       {application.notice && (
-        <figure className="mt-4 rounded-control border-l-4 border-rust bg-paper p-3">
-          <figcaption className="text-small font-semibold">Notice from the provider</figcaption>
-          <blockquote>{application.notice}</blockquote>
+        <figure className="mt-5 rounded-[1.25rem] border-2 border-rust/60 bg-rust-soft p-4">
+          <figcaption className="flex items-center gap-2 text-small font-extrabold text-rust">
+            <Mail aria-hidden="true" size={18} strokeWidth={2.4} className="shrink-0" />
+            Notice from the provider
+          </figcaption>
+          <blockquote className="mt-2 border-l-4 border-rust/40 pl-3 leading-relaxed">{application.notice}</blockquote>
         </figure>
       )}
     </Card>
@@ -44,10 +84,10 @@ function Applications({ student }: { student: Student }) {
   const all = useGrantlyStore((state) => state.applications)
   const mine = all.filter((application) => application.studentId === student.id)
   const [first, ...rest] = mine.filter((application) => application.academicYear === '2026-27')
-  if (!first) return <p>No applications for 2026-27 yet. Start from Opportunities.</p>
+  if (!first) return <p className="rounded-card border border-hairline bg-surface p-5 shadow-soft">No applications for 2026-27 yet. Start from Opportunities.</p>
   const active: [Application, ...Application[]] = [first, ...rest]
   return (
-    <div className="grid gap-8 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
       <div className="space-y-6">
         {active.map((application) => (
           <ApplicationCard key={application.id} application={application} />
