@@ -109,7 +109,7 @@ No environment variables are needed; see `.env.example`.
 
 - Each area is a lazy-loaded chunk; third-party code is a separate long-cached vendor chunk.
 - One variable font (Nunito), self-hosted; no animation library.
-- Hashed assets are served with `Cache-Control: immutable`.
+- Hashed assets use Vercel's default CDN caching, so a request made during a deploy is never cached as a long-lived 404.
 - Live Lighthouse: performance 97–100 on mobile and 100 on desktop, layout shift 0.
 
 ## Security
