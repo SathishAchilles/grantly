@@ -1,4 +1,4 @@
-import type { Source } from '../domain/types'
+import type { Source } from '@/domain/types'
 
 const checkedOn = '2026-11-07'
 

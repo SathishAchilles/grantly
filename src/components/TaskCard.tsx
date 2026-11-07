@@ -1,7 +1,7 @@
 import { BadgeCheck, Building2, Hourglass, Landmark, PencilLine, UsersRound, type LucideIcon } from 'lucide-react'
 import { useId, type ReactNode } from 'react'
-import { formatDate } from '../domain/dates'
-import type { ActionOwner, Task } from '../domain/types'
+import { formatDate } from '@/domain/dates'
+import type { ActionOwner, Task } from '@/domain/types'
 import { Fact } from './Fact'
 
 export const ownerLabel: Record<ActionOwner, string> = {

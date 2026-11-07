@@ -1,5 +1,5 @@
-import { correctionNotice } from '../data/cases'
-import { sources } from '../data/sources'
+import { correctionNotice } from '@/data/cases'
+import { sources } from '@/data/sources'
 import { docTypeLabel } from './readiness'
 import type { Application, Doc, Source, Student, Task } from './types'
 

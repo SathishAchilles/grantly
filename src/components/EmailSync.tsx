@@ -1,10 +1,10 @@
 import { CircleCheck, CircleMinus, Mail, RefreshCw, ShieldAlert, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
-import { mailbox } from '../data/emails'
-import { formatDate, todayIso } from '../domain/dates'
-import { readEmail, type EmailOutcome } from '../domain/email'
-import type { Student } from '../domain/types'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { mailbox } from '@/data/emails'
+import { formatDate, todayIso } from '@/domain/dates'
+import { readEmail, type EmailOutcome } from '@/domain/email'
+import type { Student } from '@/domain/types'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 import { Button } from './Button'
 
 const outcomeBadges: Record<EmailOutcome['kind'], { label: string; icon: LucideIcon; className: string }> = {

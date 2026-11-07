@@ -1,6 +1,6 @@
 import { CalendarDays, TriangleAlert } from 'lucide-react'
-import { formatDate } from '../domain/dates'
-import type { StudentDeadline } from '../domain/eligibility'
+import { formatDate } from '@/domain/dates'
+import type { StudentDeadline } from '@/domain/eligibility'
 import { SourceLink } from './SourceLink'
 
 export function DeadlineView({ deadline, confirmWith }: { deadline: StudentDeadline; confirmWith: string }) {

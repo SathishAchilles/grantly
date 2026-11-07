@@ -1,4 +1,4 @@
-import type { Rule, Scheme, Student } from '../domain/types'
+import type { Rule, Scheme, Student } from '@/domain/types'
 import { sources } from './sources'
 
 const NOT_CONFIRMED = 'Not yet confirmed'

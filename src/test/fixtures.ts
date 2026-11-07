@@ -1,5 +1,5 @@
-import { arjun, meera } from '../data/people'
-import type { Student } from '../domain/types'
+import { arjun, meera } from '@/data/people'
+import type { Student } from '@/domain/types'
 
 export const TODAY = '2026-11-07'
 

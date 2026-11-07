@@ -1,5 +1,5 @@
 import { BadgeCheck, Building2, FileCheck2, UserRound, type LucideIcon } from 'lucide-react'
-import type { StatusBasis } from '../domain/types'
+import type { StatusBasis } from '@/domain/types'
 
 const bases: Record<StatusBasis, { label: string; icon: LucideIcon; className: string }> = {
   'provider-confirmed': { label: 'Provider-confirmed', icon: BadgeCheck, className: 'bg-forest-soft text-forest-deep' },

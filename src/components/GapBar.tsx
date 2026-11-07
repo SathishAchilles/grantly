@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import type { FundingSummary } from '../domain/funding'
+import type { FundingSummary } from '@/domain/funding'
 
 type Part = 'family' | 'confirmed' | 'pending' | 'gap'
 

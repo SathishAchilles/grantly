@@ -1,16 +1,16 @@
 import { MessageSquareText } from 'lucide-react'
 import { useEffect, useId, useState, type FormEvent } from 'react'
-import { schemeById } from '../data/schemes'
+import { schemeById } from '@/data/schemes'
 import {
   NOTICE_MAX_LENGTH,
   planResponse,
   sampleNotices,
   type CaseworkerPlan,
   type ProposedAction,
-} from '../domain/caseworker'
-import { todayIso } from '../domain/dates'
-import type { Application, Student } from '../domain/types'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+} from '@/domain/caseworker'
+import { todayIso } from '@/domain/dates'
+import type { Application, Student } from '@/domain/types'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 import { Button } from './Button'
 import { SourceLink } from './SourceLink'
 

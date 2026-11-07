@@ -1,7 +1,7 @@
 import { UserRoundSearch } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useActivePerson } from '../app/useActivePerson'
-import type { Student } from '../domain/types'
+import { useActivePerson } from '@/hooks/useActivePerson'
+import type { Student } from '@/domain/types'
 import { PageHeader } from './PageHeader'
 
 interface StudentOnlyProps {

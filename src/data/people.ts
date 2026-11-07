@@ -1,4 +1,4 @@
-import type { Coordinator, Institution, Person, Student } from '../domain/types'
+import type { Coordinator, Institution, Person, Student } from '@/domain/types'
 
 export const lakeview: Institution = {
   id: 'lakeview',

@@ -1,8 +1,8 @@
 import { ShieldCheck, Sprout } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router'
-import { PersonSwitch } from '../components/PersonSwitch'
-import { ResetDemo } from '../components/ResetDemo'
+import { PersonSwitch } from '@/components/PersonSwitch'
+import { ResetDemo } from '@/components/ResetDemo'
 import { areas } from './areas'
 
 export function Shell() {

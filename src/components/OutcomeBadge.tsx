@@ -1,6 +1,6 @@
 import { CircleAlert, CircleCheck, CircleHelp, CircleX, type LucideIcon } from 'lucide-react'
-import type { ReadinessResult } from '../domain/readiness'
-import type { Outcome } from '../domain/types'
+import type { ReadinessResult } from '@/domain/readiness'
+import type { Outcome } from '@/domain/types'
 
 type Kind = Outcome | ReadinessResult
 

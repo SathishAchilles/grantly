@@ -1,12 +1,12 @@
 import { Award, Banknote, ClockArrowLeft, FileText, RefreshCw, type LucideIcon } from 'lucide-react'
-import { Card } from '../components/Card'
-import { StatusBadge } from '../components/StatusBadge'
-import { StudentOnly } from '../components/StudentOnly'
-import { ownerLabel } from '../components/TaskCard'
-import { schemeById } from '../data/schemes'
-import { formatDate } from '../domain/dates'
-import type { Application, Student, Track } from '../domain/types'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { Card } from '@/components/Card'
+import { StatusBadge } from '@/components/StatusBadge'
+import { StudentOnly } from '@/components/StudentOnly'
+import { ownerLabel } from '@/components/TaskCard'
+import { schemeById } from '@/data/schemes'
+import { formatDate } from '@/domain/dates'
+import type { Application, Student, Track } from '@/domain/types'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 const trackLabels: Record<Track, string> = {
   application: 'Application',

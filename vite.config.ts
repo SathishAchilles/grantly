@@ -12,6 +12,8 @@ const productionHeaders = Object.fromEntries(
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // `@/` maps to `src/`, matching `paths` in tsconfig.json.
+  resolve: { alias: { '@': '/src' } },
   preview: { headers: productionHeaders },
   build: {
     rollupOptions: {

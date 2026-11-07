@@ -1,4 +1,4 @@
-import type { Application, Task } from '../domain/types'
+import type { Application, Task } from '@/domain/types'
 
 export const correctionNotice = 'Application returned. Please provide current academic-year enrolment evidence.'
 

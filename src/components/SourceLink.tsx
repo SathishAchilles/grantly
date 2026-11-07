@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react'
-import type { Source } from '../domain/types'
+import type { Source } from '@/domain/types'
 
 export function SourceLink({ source, label = 'Source' }: { source: Pick<Source, 'title' | 'url'>; label?: string }) {
   return (

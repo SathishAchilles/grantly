@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 import { Button } from './Button'
 
 export function ResetDemo() {

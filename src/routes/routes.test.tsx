@@ -1,10 +1,10 @@
 import { screen, within } from '@testing-library/react'
 import { act } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { correctionNotice } from '../data/cases'
-import { useGrantlyStore } from '../store/useGrantlyStore'
-import { required } from '../test/fixtures'
-import { axeViolations, renderRoute } from '../test/render'
+import { correctionNotice } from '@/data/cases'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
+import { required } from '@/test/fixtures'
+import { axeViolations, renderRoute } from '@/test/render'
 
 const store = () => useGrantlyStore.getState()
 const as = (id: string) => act(() => store().setPerson(id))

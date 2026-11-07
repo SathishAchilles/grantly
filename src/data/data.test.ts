@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { freshStudent, renewalStudent } from '../test/fixtures'
+import { freshStudent, renewalStudent } from '@/test/fixtures'
 import { applications, tasks } from './cases'
 import { arjun, meera, people, priya } from './people'
 import { schemeById, schemes } from './schemes'

@@ -1,6 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router'
-import { ButtonLink } from '../components/Button'
-import { PageHeader } from '../components/PageHeader'
+import { ButtonLink } from '@/components/Button'
+import { PageHeader } from '@/components/PageHeader'
 
 /** Describes a routing or rendering error without exposing internal details. */
 export function describeError(error: unknown): string {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { applications, correctionNotice } from '../data/cases'
-import { renewalStudent } from '../test/fixtures'
+import { applications, correctionNotice } from '@/data/cases'
+import { renewalStudent } from '@/test/fixtures'
 import { cleanNotice, interpretNotice, NOTICE_MAX_LENGTH, planResponse, sampleNotices } from './caseworker'
 import type { Application } from './types'
 

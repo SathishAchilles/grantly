@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ffe, hdfcEcss, nmmss, pmUspCsss } from '../data/schemes'
-import { freshStudent, renewalStudent, TODAY } from '../test/fixtures'
+import { ffe, hdfcEcss, nmmss, pmUspCsss } from '@/data/schemes'
+import { freshStudent, renewalStudent, TODAY } from '@/test/fixtures'
 import { byDeadline, formatDate, isPassed, todayIso } from './dates'
 import { evaluateScheme, studentDeadline } from './eligibility'
 import { fundingSummary, supportKindLabel } from './funding'

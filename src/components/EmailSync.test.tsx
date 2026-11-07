@@ -1,8 +1,8 @@
 import { screen, within } from '@testing-library/react'
 import { act } from 'react'
 import { describe, expect, it } from 'vitest'
-import { useGrantlyStore } from '../store/useGrantlyStore'
-import { axeViolations, renderRoute } from '../test/render'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
+import { axeViolations, renderRoute } from '@/test/render'
 
 const store = () => useGrantlyStore.getState()
 

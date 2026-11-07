@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { applications, tasks } from '../data/cases'
-import { mailbox, type Email } from '../data/emails'
-import { arjun, meera } from '../data/people'
+import { applications, tasks } from '@/data/cases'
+import { mailbox, type Email } from '@/data/emails'
+import { arjun, meera } from '@/data/people'
 import { fundingSummary } from './funding'
 import { parseAmount, parseDate, readEmail } from './email'
 import type { Application } from './types'
-import { freshStudent, renewalStudent } from '../test/fixtures'
+import { freshStudent, renewalStudent } from '@/test/fixtures'
 
 const email = (overrides: Partial<Email>): Email => ({
   id: 'test',

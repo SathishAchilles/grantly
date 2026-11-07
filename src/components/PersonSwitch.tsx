@@ -1,5 +1,5 @@
-import { priya } from '../data/people'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { priya } from '@/data/people'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 export function PersonSwitch() {
   const activePersonId = useGrantlyStore((state) => state.activePersonId)

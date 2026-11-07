@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ffe, hdfcEcss, pmUspCsss } from '../data/schemes'
-import { freshStudent, renewalStudent } from '../test/fixtures'
+import { ffe, hdfcEcss, pmUspCsss } from '@/data/schemes'
+import { freshStudent, renewalStudent } from '@/test/fixtures'
 import { evaluateReadiness } from './readiness'
 import type { Doc } from './types'
 

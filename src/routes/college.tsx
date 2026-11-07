@@ -1,11 +1,11 @@
 import { Building2, UserRoundSearch } from 'lucide-react'
-import { useActivePerson } from '../app/useActivePerson'
-import { Button } from '../components/Button'
-import { PageHeader } from '../components/PageHeader'
-import { TaskCard } from '../components/TaskCard'
-import { byDeadline, todayIso } from '../domain/dates'
-import type { Coordinator } from '../domain/types'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { useActivePerson } from '@/hooks/useActivePerson'
+import { Button } from '@/components/Button'
+import { PageHeader } from '@/components/PageHeader'
+import { TaskCard } from '@/components/TaskCard'
+import { byDeadline, todayIso } from '@/domain/dates'
+import type { Coordinator } from '@/domain/types'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 function Queue({ coordinator }: { coordinator: Coordinator }) {
   const tasks = useGrantlyStore((state) => state.tasks)

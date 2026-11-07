@@ -1,12 +1,12 @@
 import { FileText, FolderCheck } from 'lucide-react'
-import { Card } from '../components/Card'
-import { OutcomeBadge } from '../components/OutcomeBadge'
-import { SourceLink } from '../components/SourceLink'
-import { StatusBadge } from '../components/StatusBadge'
-import { StudentOnly } from '../components/StudentOnly'
-import { schemes } from '../data/schemes'
-import { evaluateReadiness } from '../domain/readiness'
-import type { Scheme, Student } from '../domain/types'
+import { Card } from '@/components/Card'
+import { OutcomeBadge } from '@/components/OutcomeBadge'
+import { SourceLink } from '@/components/SourceLink'
+import { StatusBadge } from '@/components/StatusBadge'
+import { StudentOnly } from '@/components/StudentOnly'
+import { schemes } from '@/data/schemes'
+import { evaluateReadiness } from '@/domain/readiness'
+import type { Scheme, Student } from '@/domain/types'
 
 function ProgrammeReadiness({ scheme, student }: { scheme: Scheme; student: Student }) {
   const results = evaluateReadiness(scheme, student)

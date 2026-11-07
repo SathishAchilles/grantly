@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { useGrantlyStore } from '../store/useGrantlyStore'
-import { axeViolations, renderRoute } from '../test/render'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
+import { axeViolations, renderRoute } from '@/test/render'
 import { areas } from './areas'
 
 describe('Shell', () => {

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { beforeEach, vi } from 'vitest'
-import { useGrantlyStore } from '../store/useGrantlyStore'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 beforeEach(() => {
   // Freeze only the clock, at 7 Nov 2026 in India, so deadlines are deterministic.

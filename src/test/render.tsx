@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import { createMemoryRouter, RouterProvider } from 'react-router'
-import { routes } from '../app/router'
+import { routes } from '@/app/router'
 
 export function renderRoute(path = '/') {
   const router = createMemoryRouter(routes, { initialEntries: [path] })

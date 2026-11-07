@@ -1,4 +1,4 @@
-import type { Email } from '../data/emails'
+import type { Email } from '@/data/emails'
 import { interpretNotice } from './caseworker'
 import type { ActionOwner, Application, Doc, Student, Task } from './types'
 
