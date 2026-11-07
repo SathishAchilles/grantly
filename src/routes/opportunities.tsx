@@ -1,4 +1,15 @@
-import { CircleCheckBig, CircleHelp, CircleOff, FileSearch, GraduationCap, Wallet, type LucideIcon } from 'lucide-react'
+import { useMemo } from 'react'
+import { useSearchParams } from 'react-router'
+import {
+  CircleCheckBig,
+  CircleHelp,
+  CircleOff,
+  FileSearch,
+  GraduationCap,
+  Search,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react'
 import { ButtonLink } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { DeadlineView } from '@/components/DeadlineView'
@@ -8,8 +19,9 @@ import { SourceLink } from '@/components/SourceLink'
 import { StudentOnly } from '@/components/StudentOnly'
 import { schemes } from '@/data/schemes'
 import { todayIso } from '@/domain/dates'
-import { evaluateScheme, type Overall } from '@/domain/eligibility'
-import type { Application, Scheme, Student } from '@/domain/types'
+import { filterSchemes, parseFitFilter, type FitFilter, type ScoredScheme } from '@/domain/discovery'
+import { evaluateScheme, type Overall, type SchemeEvaluation } from '@/domain/eligibility'
+import type { Scheme, Student } from '@/domain/types'
 import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 const overallLabel: Record<Overall, string> = {
@@ -53,13 +65,12 @@ function Amount({ scheme, student }: { scheme: Scheme; student: Student }) {
 function SchemeCard({
   scheme,
   student,
-  applications,
+  evaluation,
 }: {
   scheme: Scheme
   student: Student
-  applications: Application[]
+  evaluation: SchemeEvaluation
 }) {
-  const evaluation = evaluateScheme(scheme, student, todayIso(), applications)
   const headingId = `scheme-${scheme.id}`
   const verdict = overallStyle[evaluation.overall]
   const VerdictIcon = verdict.icon
@@ -133,7 +144,7 @@ function SchemeCard({
         Meeting these conditions does not guarantee an award. {scheme.owner} makes the decision.
       </p>
       {evaluation.open && (
-        <ButtonLink to="/readiness" variant="secondary" className="mt-5 self-start">
+        <ButtonLink to={`/readiness?scheme=${scheme.id}`} variant="secondary" className="mt-5 self-start">
           Check documents for {scheme.shortName}
         </ButtonLink>
       )}
@@ -141,19 +152,89 @@ function SchemeCard({
   )
 }
 
+const fitOptions: { value: FitFilter; label: string }[] = [
+  { value: 'all', label: 'All schemes' },
+  { value: 'possible', label: 'Open to me and not ruled out' },
+  { value: 'meets', label: 'Meets every listed condition' },
+]
+
+const SEARCH_MAX_LENGTH = 80
+
 function Opportunities({ student }: { student: Student }) {
   const applications = useGrantlyStore((state) => state.applications)
+  const [params, setParams] = useSearchParams()
+  const query = (params.get('q') ?? '').slice(0, SEARCH_MAX_LENGTH)
+  const fit = parseFitFilter(params.get('show'))
+
+  const scored = useMemo<ScoredScheme[]>(
+    () => schemes.map((scheme) => ({ scheme, evaluation: evaluateScheme(scheme, student, todayIso(), applications) })),
+    [student, applications],
+  )
+  const visible = useMemo(() => filterSchemes(scored, query, fit), [scored, query, fit])
+
+  const update = (key: 'q' | 'show', value: string) => {
+    const next = new URLSearchParams(params)
+    if (value === '' || (key === 'show' && value === 'all')) next.delete(key)
+    else next.set(key, value)
+    setParams(next, { replace: true })
+  }
+
   return (
     <>
-      <p className="mb-8 max-w-3xl rounded-card border border-hairline bg-surface px-5 py-4 shadow-soft">
+      <p className="mb-6 max-w-3xl rounded-card border border-hairline bg-surface px-5 py-4 shadow-soft">
         Showing {student.name}: {student.course}, year {student.studyYear}. Domicile {student.domicile.state}; studying
         in {student.institution.place.city}, {student.institution.place.state}.
       </p>
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        {schemes.map((scheme) => (
-          <SchemeCard key={scheme.id} scheme={scheme} student={student} applications={applications} />
-        ))}
-      </div>
+      <search className="mb-6 grid gap-4 rounded-card border border-hairline bg-surface p-5 shadow-soft sm:grid-cols-[1fr_auto]">
+        <div>
+          <label htmlFor="scheme-search" className="font-bold">
+            Search schemes
+          </label>
+          <div className="relative mt-1.5">
+            <Search aria-hidden="true" size={18} className="absolute top-1/2 left-3.5 -translate-y-1/2 text-muted" />
+            <input
+              id="scheme-search"
+              type="search"
+              value={query}
+              maxLength={SEARCH_MAX_LENGTH}
+              onChange={(event) => update('q', event.target.value)}
+              placeholder="Name, provider or who it is for"
+              className="min-h-12 w-full rounded-control border-2 border-border bg-paper py-2 pr-3 pl-10"
+            />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="scheme-fit" className="font-bold">
+            Show
+          </label>
+          <select
+            id="scheme-fit"
+            value={fit}
+            onChange={(event) => update('show', event.target.value)}
+            className="mt-1.5 min-h-12 w-full rounded-control border-2 border-border bg-paper px-3"
+          >
+            {fitOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <p role="status" className="text-small font-semibold text-muted sm:col-span-2">
+          {visible.length} of {scored.length} schemes shown
+        </p>
+      </search>
+      {visible.length === 0 ? (
+        <p className="rounded-card border border-hairline bg-surface px-5 py-6 text-center">
+          No schemes match. Try a different search or choose All schemes.
+        </p>
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          {visible.map(({ scheme, evaluation }) => (
+            <SchemeCard key={scheme.id} scheme={scheme} student={student} evaluation={evaluation} />
+          ))}
+        </div>
+      )}
     </>
   )
 }

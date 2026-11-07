@@ -20,7 +20,7 @@ Grantly helps students in India turn scholarship opportunities into usable educa
 
 - **My funding plan:** the remaining gap counts only confirmed support. Pending applications are listed separately.
 - **Application emails:** fetches emails about the student's applications, matches each to an application, and proposes status, task and funding changes that apply only after the student confirms. Emails count as evidence, a payment reported as initiated is never treated as received, and messages asking for a fee to release a scholarship are flagged as likely scams.
-- **Opportunities:** each scheme is checked condition by condition (meets, does not meet, more information needed, rule needs confirmation), with the official source for every rule, amount and deadline. When official pages disagree, both dates are shown.
+- **Opportunities:** search schemes by name, provider or audience and filter to those still open to you or that meet every condition (kept in the URL, e.g. `/opportunities?q=hdfc&show=possible`); each scheme is checked condition by condition (meets, does not meet, more information needed, rule needs confirmation), with the official source for every rule, amount and deadline. When official pages disagree, both dates are shown.
 - **Readiness:** documents are checked against each programme's own rules, including accepted alternatives and rejected substitutes.
 - **Applications:** the caseworker turns a provider notice into one task with an owner.
 - **College desk:** a shared queue where a coordinator acts on requests and the student sees the result.

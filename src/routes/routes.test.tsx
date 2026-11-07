@@ -199,7 +199,7 @@ describe('Opportunities', () => {
     expect(within(hdfc).getByText('Meets every listed condition we can check.')).toBeInTheDocument()
     expect(within(hdfc).getByRole('link', { name: 'Check documents for HDFC Parivartan ECSS' })).toHaveAttribute(
       'href',
-      '/readiness',
+      '/readiness?scheme=hdfc-ecss',
     )
 
     const ffe = region('FFE')
