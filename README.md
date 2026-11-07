@@ -2,7 +2,7 @@
 
 Grantly helps students in India turn scholarship opportunities into usable education funding. It answers three questions: what can I pursue, what is missing, and who has to act next. It was built for The Outpost, a 6-hour solo frontend hackathon.
 
-**Live:** https://grantly-taupe.vercel.app
+**Live:** https://grantly-scholar.vercel.app
 
 ## What it does
 
