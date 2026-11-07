@@ -7,12 +7,12 @@ export function PersonSwitch() {
   const setPerson = useGrantlyStore((state) => state.setPerson)
 
   return (
-    <label className="flex items-center gap-2 text-small font-bold text-muted">
+    <label className="flex w-full items-center gap-2 text-small font-bold text-muted sm:w-auto">
       Viewing as
       <select
         value={activePersonId}
         onChange={(event) => setPerson(event.target.value)}
-        className="min-h-11 max-w-[13.5rem] rounded-pill border-2 border-border bg-surface py-1 pr-3 pl-4 text-small font-bold text-ink shadow-soft sm:max-w-none"
+        className="min-h-11 min-w-0 flex-1 rounded-pill border-2 border-border bg-surface py-1 pr-3 pl-4 text-small font-bold text-ink shadow-soft sm:flex-none"
       >
         {students.map((student) => (
           <option key={student.id} value={student.id}>

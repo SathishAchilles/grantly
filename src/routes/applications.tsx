@@ -1,4 +1,4 @@
-import { CalendarClock, Footprints, Mail, MapPin, UserRoundCheck } from 'lucide-react'
+import { CalendarClock, Mail, MapPin, Signpost, UserRoundCheck } from 'lucide-react'
 import { Card } from '../components/Card'
 import { Caseworker } from '../components/Caseworker'
 import { Fact } from '../components/Fact'
@@ -11,7 +11,8 @@ import type { Application, Student } from '../domain/types'
 import { useGrantlyStore } from '../store/useGrantlyStore'
 
 const step = 'relative min-h-12 pt-3 pl-16 font-extrabold'
-const stepValue = 'pb-5 pl-16 last:pb-0'
+const stepValue =
+  'relative pb-5 pl-16 before:absolute before:-top-1 before:bottom-0 before:left-[1.4375rem] before:w-[3px] before:rounded-pill before:bg-hairline last:pb-0 last:before:hidden'
 const stepIcon = 'absolute top-0 left-0 grid size-12 place-items-center rounded-pill ring-4 ring-surface'
 
 function ApplicationCard({ application }: { application: Application }) {
@@ -28,7 +29,7 @@ function ApplicationCard({ application }: { application: Application }) {
         <strong className="text-lg">{status.label}</strong>
         <StatusBadge basis={status.basis} />
       </p>
-      <dl className="relative mt-5 before:absolute before:top-6 before:bottom-6 before:left-[1.4375rem] before:w-[3px] before:rounded-pill before:bg-hairline">
+      <dl className="mt-5">
         <Fact
           label="Who acts next"
           termClassName={step}
@@ -47,7 +48,7 @@ function ApplicationCard({ application }: { application: Application }) {
           valueClassName={stepValue}
           icon={
             <span aria-hidden="true" className={`${stepIcon} bg-marigold text-ink`}>
-              <Footprints size={24} strokeWidth={2.2} />
+              <Signpost size={24} strokeWidth={2.2} />
             </span>
           }
         >

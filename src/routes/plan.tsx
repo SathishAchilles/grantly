@@ -1,4 +1,4 @@
-import { CircleCheck, Clock, Footprints, PartyPopper, type LucideIcon } from 'lucide-react'
+import { CircleCheck, Clock, PartyPopper, Signpost, type LucideIcon } from 'lucide-react'
 import { Card } from '../components/Card'
 import { Fact } from '../components/Fact'
 import { Money } from '../components/Money'
@@ -23,11 +23,11 @@ function SupportList({ items, icon: Icon, tone }: SupportListProps) {
           <span aria-hidden="true" className={`grid size-9 shrink-0 place-items-center rounded-pill ${tone}`}>
             <Icon size={18} strokeWidth={2.4} />
           </span>
-          <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <span className="min-w-0 font-semibold">
+          <span className="flex min-w-0 flex-1 items-baseline justify-between gap-x-4">
+            <span className="min-w-0 flex-1 font-semibold">
               {item.label} <span className="block text-small font-normal text-muted">({supportKindLabel[item.kind]})</span>
             </span>
-            <span className="font-extrabold">
+            <span className="shrink-0 font-extrabold">
               <Money amount={item.amount} />
             </span>
           </span>
@@ -49,7 +49,7 @@ function FundingPlan({ student }: { student: Student }) {
     <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start">
       <section aria-labelledby="actions-heading">
         <h2 id="actions-heading" className="flex items-center gap-2 text-title font-extrabold">
-          <Footprints aria-hidden="true" size={24} strokeWidth={2.2} className="text-forest" />
+          <Signpost aria-hidden="true" size={24} strokeWidth={2.2} className="text-forest" />
           Next actions
         </h2>
         {open.length === 0 ? (
