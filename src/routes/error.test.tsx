@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
 import { describeError, ErrorPage } from './error'
 
 describe('describeError', () => {
@@ -38,5 +39,24 @@ describe('ErrorPage', () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByText('The page could not be loaded (503).')).toBeInTheDocument()
+  })
+
+  it('offers a reload when a page file from an older deployment is missing', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const reload = vi.fn()
+    vi.stubGlobal('location', { ...window.location, reload })
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        lazy: () => Promise.reject(new TypeError('Failed to fetch dynamically imported module: /assets/plan-old.js')),
+        errorElement: <ErrorPage />,
+      },
+    ])
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText(/newer version of Grantly/)).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Reload page' }))
+    expect(reload).toHaveBeenCalledOnce()
+    vi.unstubAllGlobals()
   })
 })
