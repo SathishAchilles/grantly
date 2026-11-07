@@ -5,7 +5,9 @@ import vercel from './vercel.json' with { type: 'json' }
 
 // The preview server sends the same headers as Vercel, so end-to-end tests check what production serves.
 const productionHeaders = Object.fromEntries(
-  vercel.headers.flatMap((rule) => rule.headers.map((header) => [header.key, header.value])),
+  vercel.headers
+    .filter((rule) => rule.source === '/(.*)')
+    .flatMap((rule) => rule.headers.map((header) => [header.key, header.value])),
 )
 
 export default defineConfig({
