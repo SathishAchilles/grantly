@@ -3,6 +3,7 @@ import { formatDate } from '@/domain/dates'
 import type { StudentDeadline } from '@/domain/eligibility'
 import { SourceLink } from './SourceLink'
 
+/** The student deadline for a scheme, listing every source when they disagree so the student acts on the earliest date that has not passed and confirms it with the named contact. */
 export function DeadlineView({ deadline, confirmWith }: { deadline: StudentDeadline; confirmWith: string }) {
   if (deadline.status === 'none') return <p>{deadline.note}</p>
 

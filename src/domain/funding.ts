@@ -1,5 +1,6 @@
 import type { Student, SupportItem } from './types'
 
+/** Costs, family contribution and support for one student, with the amount still unfunded. */
 export interface FundingSummary {
   costs: number
   familyContribution: number
@@ -7,6 +8,7 @@ export interface FundingSummary {
   pending: SupportItem[]
   confirmedTotal: number
   pendingTotal: number
+  /** Costs left after the family contribution and confirmed support, never below zero. */
   gap: number
 }
 
@@ -28,6 +30,7 @@ export function fundingSummary(student: Student): FundingSummary {
   }
 }
 
+/** Plain-language description of how each kind of support reaches the student. */
 export const supportKindLabel: Record<SupportItem['kind'], string> = {
   cash: 'Paid to you',
   'fee-reduction': 'Reduces your college fee; not cash',

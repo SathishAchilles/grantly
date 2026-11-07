@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router'
 import { ErrorPage } from '@/routes/error'
 import { Shell } from './Shell'
 
+/** The route tree, with each page loaded on demand. */
 export const routes: RouteObject[] = [
   {
     path: '/',
@@ -20,4 +21,5 @@ export const routes: RouteObject[] = [
   },
 ]
 
+/** Creates the browser router from the route tree. */
 export const createAppRouter = () => createBrowserRouter(routes)

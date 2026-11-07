@@ -1,15 +1,20 @@
 import { applies } from './eligibility'
 import type { Doc, EvidenceRequirement, Scheme, Student } from './types'
 
+/** How well the student's documents cover one requirement. */
 export type ReadinessResult = 'satisfied' | 'alternative' | 'not-satisfied' | 'missing'
 
+/** One evidence requirement with the document matched to it and what the student should do next. */
 export interface RequirementReadiness {
   requirement: EvidenceRequirement
   result: ReadinessResult
+  /** The document that was matched, or the one that is out of date or refused. */
   doc?: Doc
+  /** Plain-language next step for the student. */
   guidance: string
 }
 
+/** Lower-case names for document types, used when telling the student what to add. */
 const docTypeLabel: Record<Doc['type'], string> = {
   'income-certificate': 'income certificate',
   'salary-slips': 'salary slips',
@@ -67,6 +72,13 @@ function evaluateRequirement(requirement: EvidenceRequirement, student: Student,
   return { requirement, result: 'missing', guidance: `Add your ${needed}.` }
 }
 
+/**
+ * Checks the student's documents against each evidence requirement that applies to them.
+ *
+ * @param scheme - The scheme whose evidence requirements are checked.
+ * @param student - The student whose documents are checked.
+ * @returns One readiness entry per applicable requirement.
+ */
 export function evaluateReadiness(scheme: Scheme, student: Student): RequirementReadiness[] {
   return scheme.evidence
     .filter((requirement) => applies(requirement.appliesTo, student.applicantType))

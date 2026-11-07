@@ -99,6 +99,7 @@ function Applications({ student }: { student: Student }) {
   )
 }
 
+/** The applications page: what is missing on each application, who acts next, and notices turned into a single task. */
 export function Component() {
   return (
     <StudentOnly title="Applications" purpose="Know what is missing, who has to act next, and turn confusing notices into one clear task.">

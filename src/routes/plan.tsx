@@ -122,6 +122,7 @@ function FundingPlan({ student }: { student: Student }) {
   )
 }
 
+/** The funding plan page: what is confirmed, what is still missing and who has to act next. */
 export function Component() {
   return (
     <StudentOnly title="My funding plan" purpose="See what is confirmed, what is still missing, and who has to act next.">

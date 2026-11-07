@@ -17,6 +17,7 @@ const incomeAtMost = (id: string, limit: number, label: string, source: Rule['so
       : notMet(`Family income ₹${student.familyIncome.toLocaleString('en-IN')} is above the limit.`),
 })
 
+/** The PM-USP Central Sector Scheme of Scholarship (CSSS), with its rules, evidence and deadlines. */
 export const pmUspCsss: Scheme = {
   id: 'pm-usp-csss',
   name: 'PM-USP Central Sector Scheme of Scholarship for College and University Students (CSSS)',
@@ -194,6 +195,7 @@ const hdfcAmounts: Record<Student['level'], number> = {
   'pg-professional': 75_000,
 }
 
+/** The HDFC Bank Parivartan Educational Crisis Scholarship Support (ECSS) programme. */
 export const hdfcEcss: Scheme = {
   id: 'hdfc-ecss',
   name: "HDFC Bank Parivartan's Educational Crisis Scholarship Support (ECSS) 2026-27",
@@ -281,6 +283,7 @@ export const hdfcEcss: Scheme = {
 
 const ffeCourses = ['B.E.', 'B.Tech', 'Integrated M.Tech', 'MBBS', 'LLB']
 
+/** The Foundation For Excellence (FFE) scholarship. */
 export const ffe: Scheme = {
   id: 'ffe',
   name: 'Foundation For Excellence (FFE) Scholarship 2026-27',
@@ -383,6 +386,7 @@ export const ffe: Scheme = {
   amountFor: () => ({ value: null, basis: 'Not published by the provider', source: null }),
 }
 
+/** The National Means-cum-Merit Scholarship Scheme (NMMSS). */
 export const nmmss: Scheme = {
   id: 'nmmss',
   name: 'National Means-cum-Merit Scholarship Scheme (NMMSS) 2026-27',
@@ -422,8 +426,15 @@ export const nmmss: Scheme = {
   amountFor: () => ({ value: null, basis: 'Not published by the provider', source: null }),
 }
 
+/** Every scheme the app can evaluate. */
 export const schemes: Scheme[] = [pmUspCsss, hdfcEcss, ffe, nmmss]
 
+/**
+ * Looks up a scheme by its id.
+ *
+ * @param id - The scheme id.
+ * @returns The matching scheme. Throws when the id is unknown.
+ */
 export function schemeById(id: string): Scheme {
   const scheme = schemes.find((candidate) => candidate.id === id)
   if (!scheme) throw new Error(`Unknown scheme: ${id}`)

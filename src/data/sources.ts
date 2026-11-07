@@ -2,6 +2,7 @@ import type { Source } from '@/domain/types'
 
 const checkedOn = '2026-11-07'
 
+/** Official pages cited for scheme rules and deadlines, each with the date it was last checked. */
 export const sources = {
   nspAnnouncement: {
     title: 'NSP Students page announcement',

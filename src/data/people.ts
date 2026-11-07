@@ -1,5 +1,6 @@
 import type { Coordinator, Institution, Person, Student } from '@/domain/types'
 
+/** The college where Meera studies and Priya coordinates scholarships. */
 export const lakeview: Institution = {
   id: 'lakeview',
   name: 'Lakeview Arts and Science College',
@@ -7,6 +8,7 @@ export const lakeview: Institution = {
   recognised: true,
 }
 
+/** The college where Arjun studies. */
 export const deccan: Institution = {
   id: 'deccan',
   name: 'Deccan Institute of Technology',
@@ -14,6 +16,7 @@ export const deccan: Institution = {
   recognised: true,
 }
 
+/** A renewal applicant studying B.Sc. Physics. */
 export const meera: Student = {
   id: 'meera',
   role: 'student',
@@ -45,6 +48,7 @@ export const meera: Student = {
   ],
 }
 
+/** A fresh applicant studying B.Tech. */
 export const arjun: Student = {
   id: 'arjun',
   role: 'student',
@@ -77,6 +81,7 @@ export const arjun: Student = {
   ],
 }
 
+/** The scholarship coordinator at Lakeview. */
 export const priya: Coordinator = {
   id: 'priya',
   role: 'coordinator',
@@ -85,4 +90,5 @@ export const priya: Coordinator = {
   institution: lakeview,
 }
 
+/** Everyone who can be switched to, students first. */
 export const people: Person[] = [meera, arjun, priya]

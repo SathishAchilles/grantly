@@ -8,6 +8,7 @@ const bases: Record<StatusBasis, { label: string; icon: LucideIcon; className: s
   'student-reported': { label: 'Student-reported', icon: UserRound, className: 'bg-muted-soft text-muted' },
 }
 
+/** A badge showing who or what a status rests on, such as the provider or the student's own report, so the student can judge how far to trust it. */
 export function StatusBadge({ basis }: { basis: StatusBasis }) {
   const { label, icon: Icon, className } = bases[basis]
   return (

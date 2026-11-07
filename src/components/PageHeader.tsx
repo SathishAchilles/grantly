@@ -5,6 +5,7 @@ interface PageHeaderProps {
   purpose: string
 }
 
+/** The page title and a one-line purpose, which also sets the browser tab title so each page is identifiable. */
 export function PageHeader({ title, purpose }: PageHeaderProps) {
   useEffect(() => {
     document.title = `${title} | GRANTLY`

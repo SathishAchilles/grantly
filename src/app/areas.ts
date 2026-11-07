@@ -8,12 +8,14 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+/** A top-level section of the app, shown in the main navigation. */
 export interface Area {
   path: string
   label: string
   icon: LucideIcon
 }
 
+/** The navigation sections in display order. */
 export const areas: Area[] = [
   { path: '/', label: 'My funding plan', icon: Wallet },
   { path: '/opportunities', label: 'Opportunities', icon: Search },

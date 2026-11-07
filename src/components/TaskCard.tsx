@@ -4,6 +4,7 @@ import { formatDate } from '@/domain/dates'
 import type { ActionOwner, Task } from '@/domain/types'
 import { Fact } from './Fact'
 
+/** Plain-language names for who has to act on a task. */
 export const ownerLabel: Record<ActionOwner, string> = {
   student: 'Student',
   institution: 'College',
@@ -35,6 +36,7 @@ interface TaskCardProps {
   children?: ReactNode
 }
 
+/** One task with its owner, status and reason, framed for the viewer so a student can tell what they must do and what they are waiting on others for. */
 export function TaskCard({ task, viewer, featured = false, children }: TaskCardProps) {
   const headingId = useId()
   const waiting = viewer === 'student' && task.owner !== 'student'

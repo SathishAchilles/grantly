@@ -18,6 +18,13 @@ export const todayIso = (now: Date = new Date()) => isoInIndia.format(now)
 /** Formats a YYYY-MM-DD date as, for example, "30 Nov 2026". */
 export const formatDate = (iso: string) => display.format(new Date(`${iso}T00:00:00Z`))
 
+/**
+ * Whether a closing date is already behind us.
+ *
+ * @param iso - The date to check, as YYYY-MM-DD.
+ * @param today - Today's date, as YYYY-MM-DD.
+ * @returns True when `iso` is before `today`.
+ */
 export const isPassed = (iso: string, today: string) => iso < today
 
 /** Sorts by deadline, earliest first, with undated items last. */

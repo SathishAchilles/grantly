@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useGrantlyStore } from '@/store/useGrantlyStore'
 import { Button } from './Button'
 
+/** A start-over control that asks for confirmation before clearing all saved progress, then confirms that it was cleared. */
 export function ResetDemo() {
   const reset = useGrantlyStore((state) => state.reset)
   const [confirming, setConfirming] = useState(false)

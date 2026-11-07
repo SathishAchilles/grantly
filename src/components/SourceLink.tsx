@@ -1,6 +1,7 @@
 import { ExternalLink } from 'lucide-react'
 import type { Source } from '@/domain/types'
 
+/** A link to the official source behind a claim, opening in a new tab and announcing that to assistive technology. */
 export function SourceLink({ source, label = 'Source' }: { source: Pick<Source, 'title' | 'url'>; label?: string }) {
   return (
     <a

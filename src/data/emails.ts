@@ -1,3 +1,4 @@
+/** A message in a student's mailbox. */
 export interface Email {
   id: string
   studentId: string

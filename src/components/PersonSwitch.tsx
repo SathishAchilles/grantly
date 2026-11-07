@@ -1,6 +1,7 @@
 import { priya } from '@/data/people'
 import { useGrantlyStore } from '@/store/useGrantlyStore'
 
+/** A selector for choosing which student or the college coordinator the app is shown as. */
 export function PersonSwitch() {
   const activePersonId = useGrantlyStore((state) => state.activePersonId)
   const students = useGrantlyStore((state) => state.students)

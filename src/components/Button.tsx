@@ -15,6 +15,7 @@ interface ButtonProps extends ComponentProps<'button'> {
   variant?: Variant
 }
 
+/** A pill-shaped action button; the secondary variant is for lower-priority actions beside a primary one. */
 export function Button({ variant = 'primary', className = '', type = 'button', ...props }: ButtonProps) {
   return <button type={type} className={`${base} ${variants[variant]} ${className}`} {...props} />
 }
@@ -23,6 +24,7 @@ interface ButtonLinkProps extends ComponentProps<typeof Link> {
   variant?: Variant
 }
 
+/** A router link styled as a button, for actions that navigate to another page instead of changing state. */
 export function ButtonLink({ variant = 'primary', className = '', ...props }: ButtonLinkProps) {
   return <Link className={`${base} ${variants[variant]} ${className}`} {...props} />
 }

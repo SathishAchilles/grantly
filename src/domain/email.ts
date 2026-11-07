@@ -2,6 +2,7 @@ import type { Email } from '@/data/emails'
 import { interpretNotice } from './caseworker'
 import type { ActionOwner, Application, Doc, Student, Task } from './types'
 
+/** One change to the records that an email justifies. */
 export type EmailChange =
   | { type: 'application-status'; applicationId: string; label: string; owner: ActionOwner }
   | { type: 'payment'; applicationId: string; label: string }
@@ -10,6 +11,7 @@ export type EmailChange =
   | { type: 'complete-task'; taskId: string }
   | { type: 'add-document'; studentId: string; doc: Omit<Doc, 'basis'> }
 
+/** What reading an email led to: updates to apply, or a reason nothing changes. */
 export type EmailOutcome =
   | { kind: 'update'; email: Email; summary: string; changes: EmailChange[] }
   | { kind: 'up-to-date' | 'ignored' | 'suspicious'; email: Email; summary: string }
@@ -40,6 +42,15 @@ export function parseDate(text: string): string | null {
 
 const formatRupees = (amount: number) => `₹${amount.toLocaleString('en-IN')}`
 
+/**
+ * Matches an email to the student's applications and works out which records it changes.
+ *
+ * @param email - The email to read.
+ * @param student - The student whose mailbox it is.
+ * @param applications - All applications, from which the student's are picked.
+ * @param tasks - All tasks, used to find an open task the email completes.
+ * @returns An update with its changes, or why the email is up to date, ignored or suspicious.
+ */
 export function readEmail(email: Email, student: Student, applications: Application[], tasks: Task[]): EmailOutcome {
   const text = `${email.subject} ${email.body}`.toLowerCase()
   const amount = parseAmount(text)

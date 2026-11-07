@@ -1,7 +1,9 @@
 import type { Application, Task } from '@/domain/types'
 
+/** The notice text returned with the correction request on the sample application. */
 export const correctionNotice = 'Application returned. Please provide current academic-year enrolment evidence.'
 
+/** Starting applications for the sample students. */
 export const applications: Application[] = [
   {
     id: 'meera-pmusp-2025',
@@ -74,6 +76,7 @@ export const applications: Application[] = [
   },
 ]
 
+/** Starting tasks, including those waiting on the college. */
 export const tasks: Task[] = [
   {
     id: 'task-meera-correction',

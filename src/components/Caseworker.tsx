@@ -42,6 +42,7 @@ function ConfirmBar({ action, onDone, onCancel }: { action: ProposedAction; onDo
   )
 }
 
+/** Turns a pasted notice about an application into a proposed next step, shown for the student to confirm or cancel before anything is created or resubmitted. */
 export function Caseworker({ student, applications }: CaseworkerProps) {
   const [applicationId, setApplicationId] = useState(applications[0].id)
   const [notice, setNotice] = useState('')

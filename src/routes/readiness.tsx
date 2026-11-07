@@ -85,6 +85,7 @@ function Readiness({ student }: { student: Student }) {
   )
 }
 
+/** The readiness page: the student's documents checked against each programme's own rules, including accepted alternatives. */
 export function Component() {
   return (
     <StudentOnly title="Readiness" purpose="Check your documents against each programme's own rules, including accepted alternatives.">

@@ -137,6 +137,7 @@ function Opportunities({ student }: { student: Student }) {
   )
 }
 
+/** The opportunities page: which schemes fit the student, condition by condition, with the official source for each. */
 export function Component() {
   return (
     <StudentOnly title="Opportunities" purpose="See which schemes fit, condition by condition, with the official source for each.">

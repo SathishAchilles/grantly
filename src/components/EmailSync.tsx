@@ -31,6 +31,7 @@ function OutcomeItem({ outcome }: { outcome: EmailOutcome }) {
   )
 }
 
+/** Reads the student's mailbox and shows what each email would change, so application statuses are updated only after the student agrees and suspected scams are flagged instead of acted on. */
 export function EmailSync({ student }: { student: Student }) {
   const applications = useGrantlyStore((state) => state.applications)
   const tasks = useGrantlyStore((state) => state.tasks)

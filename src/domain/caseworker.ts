@@ -3,18 +3,23 @@ import { sources } from '@/data/sources'
 import { docTypeLabel } from './readiness'
 import type { Application, Doc, Source, Student, Task } from './types'
 
+/** Longest notice text kept, so a long paste cannot flood the page. */
 export const NOTICE_MAX_LENGTH = 2000
 
+/** The kinds of provider notice the app recognises. */
 export type NoticeKind = 'enrolment-evidence' | 'missing-document' | 'payment-issue' | 'unrecognised'
 
+/** What a notice asks for. A missing document also names which document. */
 export type Interpretation =
   | { kind: 'missing-document'; docType: Doc['type'] }
   | { kind: Exclude<NoticeKind, 'missing-document'> }
 
+/** A change the student can confirm: attach a document or create a task. */
 export type ProposedAction =
   | { type: 'attach-document'; applicationId: string; doc: Doc }
   | { type: 'create-task'; task: Omit<Task, 'id' | 'status'> }
 
+/** The reading of a notice: steps taken, a summary for the student and the action proposed, if any. */
 export interface CaseworkerPlan {
   kind: NoticeKind
   steps: string[]
@@ -34,6 +39,12 @@ const documentWords: [RegExp, Doc['type']][] = [
 /** Normalises pasted text: caps the length, collapses whitespace and trims. */
 export const cleanNotice = (text: string) => text.slice(0, NOTICE_MAX_LENGTH).replace(/\s+/g, ' ').trim()
 
+/**
+ * Classifies pasted notice text by the keywords it contains.
+ *
+ * @param text - The notice as pasted.
+ * @returns The notice kind, plus the document type for a missing document.
+ */
 export function interpretNotice(text: string): Interpretation {
   const notice = cleanNotice(text).toLowerCase()
   if (/enrol|enroll|bonafide/.test(notice) && /academic year|current|bonafide/.test(notice)) return { kind: 'enrolment-evidence' }
@@ -45,6 +56,14 @@ export function interpretNotice(text: string): Interpretation {
   return { kind: 'unrecognised' }
 }
 
+/**
+ * Turns a notice into a plan the student can confirm, without changing any record itself.
+ *
+ * @param text - The notice as pasted.
+ * @param student - The student the notice is about.
+ * @param application - The application the notice relates to.
+ * @returns The steps, a summary and the proposed action, or null when the notice is not recognised.
+ */
 export function planResponse(text: string, student: Student, application: Application): CaseworkerPlan {
   const interpretation = interpretNotice(text)
   const requirement = cleanNotice(text)
@@ -130,6 +149,7 @@ export function planResponse(text: string, student: Student, application: Applic
   }
 }
 
+/** Example notices offered for trying the notice reader. */
 export const sampleNotices = [
   { label: 'Returned: enrolment evidence', text: correctionNotice },
   { label: 'Incomplete: missing document', text: 'Application incomplete: income certificate not uploaded.' },

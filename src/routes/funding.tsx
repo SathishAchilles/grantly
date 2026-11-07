@@ -106,6 +106,7 @@ function Funding({ student }: { student: Student }) {
   )
 }
 
+/** The funding and renewal page: each application followed through award, payment and renewal as separate steps. */
 export function Component() {
   return (
     <StudentOnly

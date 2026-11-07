@@ -50,6 +50,7 @@ function Queue({ coordinator }: { coordinator: Coordinator }) {
   )
 }
 
+/** The college desk page: the coordinator's shared queue of what the college owes its students, with a pointer for students on how to reach it. */
 export function Component() {
   const person = useActivePerson()
   return (

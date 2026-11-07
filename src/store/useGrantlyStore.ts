@@ -7,6 +7,7 @@ import type { ProposedAction } from '@/domain/caseworker'
 import type { EmailChange, EmailOutcome } from '@/domain/email'
 import type { Application, StatusBasis, Student, Task, TaskStatus } from '@/domain/types'
 
+/** The saved state: who is active and the records that can change. */
 export interface GrantlyData {
   activePersonId: string
   students: Student[]
@@ -23,6 +24,7 @@ interface GrantlyActions {
   reset: () => void
 }
 
+/** The saved data together with the actions that change it. */
 export type GrantlyState = GrantlyData & GrantlyActions
 
 type Records = Pick<GrantlyData, 'students' | 'applications' | 'tasks'>
@@ -136,6 +138,7 @@ function applyChange(records: Records, change: EmailChange, subject: string, tod
   }
 }
 
+/** Applies the changes from emails that produced an update and marks all the given emails as processed. */
 export function applyEmailOutcomes(data: GrantlyData, outcomes: EmailOutcome[], today: string): GrantlyData {
   let records: Records = { students: data.students, applications: data.applications, tasks: data.tasks }
   for (const outcome of outcomes) {
@@ -145,6 +148,7 @@ export function applyEmailOutcomes(data: GrantlyData, outcomes: EmailOutcome[], 
   return { ...data, ...records, processedEmailIds: [...data.processedEmailIds, ...outcomes.map((outcome) => outcome.email.id)] }
 }
 
+/** The app store. Progress is saved in `localStorage` and restored when the shape is valid. */
 export const useGrantlyStore = create<GrantlyState>()(
   persist(
     (set) => ({

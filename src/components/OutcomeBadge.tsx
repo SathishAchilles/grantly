@@ -15,6 +15,7 @@ const kinds: Record<Kind, { label: string; icon: LucideIcon; className: string }
   missing: { label: 'Missing', icon: CircleAlert, className: 'bg-rust-soft text-rust' },
 }
 
+/** A badge giving the result of an eligibility or readiness check as an icon and a plain-language label, so the outcome never depends on colour alone. */
 export function OutcomeBadge({ kind }: { kind: Kind }) {
   const { label, icon: Icon, className } = kinds[kind]
   return (

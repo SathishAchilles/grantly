@@ -5,6 +5,7 @@ import { PersonSwitch } from '@/components/PersonSwitch'
 import { ResetDemo } from '@/components/ResetDemo'
 import { areas } from './areas'
 
+/** The page frame: skip link, header with navigation, main area, footer and scroll restoration. */
 export function Shell() {
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
