@@ -76,6 +76,7 @@ describe('StatusBadge', () => {
   it.each<[StatusBasis, string]>([
     ['provider-confirmed', 'Provider-confirmed'],
     ['evidence', 'Supported by evidence'],
+    ['college-confirmed', 'Confirmed by college staff'],
     ['student-reported', 'Student-reported'],
   ])('labels %s as "%s" in text, not colour alone', (basis, label) => {
     render(<StatusBadge basis={basis} />)

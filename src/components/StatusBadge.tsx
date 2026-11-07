@@ -1,9 +1,10 @@
-import { BadgeCheck, FileCheck2, UserRound, type LucideIcon } from 'lucide-react'
+import { BadgeCheck, Building2, FileCheck2, UserRound, type LucideIcon } from 'lucide-react'
 import type { StatusBasis } from '../domain/types'
 
 const bases: Record<StatusBasis, { label: string; icon: LucideIcon; className: string }> = {
   'provider-confirmed': { label: 'Provider-confirmed', icon: BadgeCheck, className: 'text-forest' },
   evidence: { label: 'Supported by evidence', icon: FileCheck2, className: 'text-blue' },
+  'college-confirmed': { label: 'Confirmed by college staff', icon: Building2, className: 'text-forest' },
   'student-reported': { label: 'Student-reported', icon: UserRound, className: 'text-muted' },
 }
 
