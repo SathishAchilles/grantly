@@ -12,8 +12,13 @@ export function PageHeader({ title, purpose }: PageHeaderProps) {
 
   return (
     <div className="mb-8 max-w-3xl">
-      <h1 className="font-display text-display leading-none font-semibold tracking-tight">{title}</h1>
-      <p className="mt-4 text-lg text-muted">{purpose}</p>
+      <span aria-hidden="true" className="mb-4 flex gap-1.5">
+        <span className="h-2 w-10 rounded-pill bg-forest" />
+        <span className="h-2 w-4 rounded-pill bg-marigold" />
+        <span className="h-2 w-2 rounded-pill bg-rust/70" />
+      </span>
+      <h1 className="font-display text-display leading-[1.05] font-extrabold tracking-tight">{title}</h1>
+      <p className="mt-3 text-lg leading-relaxed text-muted sm:text-xl">{purpose}</p>
     </div>
   )
 }
