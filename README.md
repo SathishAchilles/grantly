@@ -7,13 +7,16 @@ Grantly helps students in India turn scholarship opportunities into usable educa
 ## What it does
 
 - **My funding plan:** the remaining gap counts only confirmed support. Pending applications are listed separately.
+- **Application emails:** fetches emails about the student's applications, matches each to an application, and proposes status, task and funding changes that apply only after the student confirms. Emails count as evidence, a payment reported as initiated is never treated as received, and messages asking for a fee to release a scholarship are flagged as likely scams.
 - **Opportunities:** each scheme is checked condition by condition (meets, does not meet, more information needed, rule needs confirmation), with the official source for every rule, amount and deadline. When official pages disagree, both dates are shown.
 - **Readiness:** documents are checked against each programme's own rules, including accepted alternatives and rejected substitutes.
-- **Applications:** a demo caseworker turns a provider notice into one task with an owner. It is a scripted demo using fixed rules, not AI.
+- **Applications:** the caseworker turns a provider notice into one task with an owner.
 - **College desk:** a shared queue where a coordinator acts on requests and the student sees the result.
 - **Funding and renewal:** application, award, payment and renewal stay separate tracks, each showing whether the status was provider-confirmed, supported by evidence, confirmed by college staff, or student-reported.
 
-Use "Viewing as" to switch between Meera Krishnan (renewing PM-USP CSSS), Arjun Kumar (a fresh B.Tech applicant) and Priya Nair (a college coordinator). "Reset demo data" in the footer restores the starting state.
+Use "Viewing as" to switch between Meera Krishnan (renewing PM-USP CSSS), Arjun Kumar (a fresh B.Tech applicant) and Priya Nair (a college coordinator). "Start over" in the footer restores the starting state.
+
+**What is simulated:** the Gmail connection is simulated. Grantly does not sign in to Google or read a real mailbox; "Fetch application emails" returns a fixed set of fictional emails from `example.org` addresses. Both the email reader and the caseworker use fixed, tested rules, not machine learning, and there is no backend. A real Gmail connection would need Google's restricted-scope verification for the `gmail.readonly` scope.
 
 Scheme facts come from official sources checked on 7 Nov 2026: PM-USP CSSS, HDFC Bank Parivartan ECSS, Foundation For Excellence and NMMSS. Where a provider does not publish a value, Grantly says so instead of guessing.
 
