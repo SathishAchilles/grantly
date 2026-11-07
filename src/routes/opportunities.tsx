@@ -1,3 +1,4 @@
+import { CircleCheckBig, CircleHelp, CircleOff, FileSearch, GraduationCap, Wallet, type LucideIcon } from 'lucide-react'
 import { ButtonLink } from '../components/Button'
 import { Card } from '../components/Card'
 import { DeadlineView } from '../components/DeadlineView'
@@ -16,18 +17,26 @@ const overallLabel: Record<Overall, string> = {
   'more-information-needed': 'More information is needed before we can say.',
 }
 
+const overallStyle: Record<Overall, { icon: LucideIcon; className: string }> = {
+  'meets-listed-conditions': { icon: CircleCheckBig, className: 'bg-forest-soft text-forest-deep' },
+  'does-not-meet': { icon: CircleOff, className: 'bg-rust-soft text-rust' },
+  'more-information-needed': { icon: CircleHelp, className: 'bg-blue-soft text-blue' },
+}
+
 function Amount({ scheme, student }: { scheme: Scheme; student: Student }) {
   const amount = scheme.amountFor(student)
   if (amount.value === null || amount.source === null) {
     return (
-      <p className="flex flex-wrap items-center gap-x-3">
+      <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <Wallet aria-hidden="true" size={18} className="shrink-0 text-forest" />
         <span>Amount: Not published by the provider</span>
         <SourceLink source={{ title: scheme.shortName, url: scheme.providerUrl }} label="Provider" />
       </p>
     )
   }
   return (
-    <p className="flex flex-wrap items-center gap-x-3">
+    <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <Wallet aria-hidden="true" size={18} className="shrink-0 text-forest" />
       <span>
         Amount: <strong><Money amount={amount.value} /></strong> {amount.basis}
       </span>
@@ -39,14 +48,23 @@ function Amount({ scheme, student }: { scheme: Scheme; student: Student }) {
 function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
   const evaluation = evaluateScheme(scheme, student, todayIso())
   const headingId = `scheme-${scheme.id}`
+  const verdict = overallStyle[evaluation.overall]
+  const VerdictIcon = verdict.icon
   return (
-    <Card aria-labelledby={headingId}>
-      <h2 id={headingId} className="text-title font-semibold">
-        {scheme.shortName}
-      </h2>
-      <p className="text-small text-muted">{scheme.name}</p>
+    <Card aria-labelledby={headingId} className="flex flex-col">
+      <div className="flex items-start gap-4">
+        <span aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-[1.1rem] bg-peach text-ink">
+          <GraduationCap size={26} strokeWidth={2.2} />
+        </span>
+        <div className="min-w-0">
+          <h2 id={headingId} className="text-title leading-tight font-extrabold">
+            {scheme.shortName}
+          </h2>
+          <p className="mt-0.5 text-small text-muted">{scheme.name}</p>
+        </div>
+      </div>
 
-      <dl className="mt-4 grid gap-x-6 gap-y-1 text-small sm:grid-cols-[auto_1fr]">
+      <dl className="mt-5 grid gap-x-5 gap-y-1 rounded-control bg-paper p-4 text-small sm:grid-cols-[auto_1fr] [&>dd]:min-w-0 [&>dd]:break-words max-sm:[&>dd]:mb-2 [&>dt]:font-bold [&>dt]:text-muted">
         <dt className="font-semibold">Run by</dt>
         <dd>{scheme.owner}</dd>
         <dt className="font-semibold">Funded by</dt>
@@ -63,31 +81,39 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
         <dd>{scheme.paymentRoute}</dd>
       </dl>
 
-      <div className="mt-4 space-y-2">
-        <p className={evaluation.open ? '' : 'font-semibold text-rust'}>{evaluation.availability}</p>
+      <div className="mt-5 space-y-3">
+        <p className={evaluation.open ? 'font-semibold' : 'rounded-control bg-rust-soft px-3 py-2 font-extrabold text-rust'}>
+          {evaluation.availability}
+        </p>
         <Amount scheme={scheme} student={student} />
         <DeadlineView deadline={evaluation.deadline} confirmWith={scheme.confirmWith ?? scheme.owner} />
       </div>
 
-      <h3 className="mt-6 font-semibold">Conditions for {student.applicantType} applicants</h3>
-      <ul className="mt-2 space-y-3">
+      <h3 className="mt-7 flex items-center gap-2 font-extrabold">
+        <FileSearch aria-hidden="true" size={20} strokeWidth={2.4} className="shrink-0 text-forest" />
+        Conditions for {student.applicantType} applicants
+      </h3>
+      <ul className="mt-3 space-y-2.5">
         {evaluation.results.map(({ rule, outcome }) => (
-          <li key={rule.id} className="border-l-2 border-hairline pl-3">
-            <p className="font-medium">{rule.label}</p>
+          <li key={rule.id} className="rounded-control border border-hairline bg-surface p-3.5">
+            <p className="font-bold">{rule.label}</p>
             <OutcomeBadge kind={outcome.result} />
             <p className="text-small">{outcome.reason}</p>
-            {outcome.ask && <p className="text-small font-medium">Next: {outcome.ask}</p>}
+            {outcome.ask && <p className="mt-1 text-small font-bold">Next: {outcome.ask}</p>}
             {rule.source && <SourceLink source={rule.source} />}
           </li>
         ))}
       </ul>
 
-      <p className="mt-4 font-semibold">{overallLabel[evaluation.overall]}</p>
-      <p className="text-small text-muted">
+      <p className={`mt-5 flex items-start gap-2.5 rounded-control px-4 py-3 font-extrabold ${verdict.className}`}>
+        <VerdictIcon aria-hidden="true" size={22} strokeWidth={2.4} className="mt-0.5 shrink-0" />
+        {overallLabel[evaluation.overall]}
+      </p>
+      <p className="mt-2 text-small text-muted">
         Meeting these conditions does not guarantee an award. {scheme.owner} makes the decision.
       </p>
       {evaluation.open && (
-        <ButtonLink to="/readiness" variant="secondary" className="mt-4">
+        <ButtonLink to="/readiness" variant="secondary" className="mt-5 self-start">
           Check documents for {scheme.shortName}
         </ButtonLink>
       )}
@@ -98,11 +124,11 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
 function Opportunities({ student }: { student: Student }) {
   return (
     <>
-      <p className="mb-6 max-w-3xl">
+      <p className="mb-8 max-w-3xl rounded-card border border-hairline bg-surface px-5 py-4 shadow-soft">
         Showing {student.name}: {student.course}, year {student.studyYear}, {student.applicantType} applicant. Domicile{' '}
         {student.domicile.state}; studying in {student.institution.place.city}, {student.institution.place.state}.
       </p>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         {schemes.map((scheme) => (
           <SchemeCard key={scheme.id} scheme={scheme} student={student} />
         ))}
