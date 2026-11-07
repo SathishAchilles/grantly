@@ -7,7 +7,14 @@ import type { Application, Doc, Source, Student, Task } from './types'
 export const NOTICE_MAX_LENGTH = 2000
 
 /** The kinds of provider notice the app recognises. */
-export type NoticeKind = 'enrolment-evidence' | 'missing-document' | 'payment-issue' | 'unrecognised'
+export type NoticeKind =
+  | 'enrolment-evidence'
+  | 'missing-document'
+  | 'payment-issue'
+  | 'payment-account-invalid'
+  | 'payment-account-status'
+  | 'payment-unknown'
+  | 'unrecognised'
 
 /** What a notice asks for. A missing document also names which document. */
 export type Interpretation =
@@ -49,8 +56,14 @@ export function interpretNotice(text: string): Interpretation {
   const notice = cleanNotice(text).toLowerCase()
   if (/enrol|enroll|bonafide/.test(notice) && /academic year|current|bonafide/.test(notice))
     return { kind: 'enrolment-evidence' }
-  if (/aadhaar|npci|seeding|account/.test(notice) && /payment|failed|rejected|credit/.test(notice))
-    return { kind: 'payment-issue' }
+  const paymentContext = /payment|failed|rejected|returned|credit|disburs|\bdbt\b/.test(notice)
+  if (paymentContext) {
+    if (/aadhaar|npci|mapper|seeding|\bdbt\b/.test(notice)) return { kind: 'payment-issue' }
+    if (/closed|frozen|dormant|inactive|\bkyc\b/.test(notice)) return { kind: 'payment-account-status' }
+    if (/invalid|incorrect|wrong|mismatch|ifsc/.test(notice)) return { kind: 'payment-account-invalid' }
+    if (/payment/.test(notice) && /failed|rejected|returned|unsuccessful/.test(notice))
+      return { kind: 'payment-unknown' }
+  }
   if (/missing|not uploaded|incomplete/.test(notice)) {
     const match = documentWords.find(([pattern]) => pattern.test(notice))
     if (match) return { kind: 'missing-document', docType: match[1] }
@@ -151,6 +164,38 @@ export function planResponse(text: string, student: Student, application: Applic
           task: { ...taskBase, title: 'Ask your bank to update the NPCI mapper', owner: 'bank' },
         },
       }
+    case 'payment-account-invalid':
+      return {
+        kind: interpretation.kind,
+        steps: [read, 'Identified a payment problem caused by the bank account details.'],
+        summary:
+          'Check your account number and IFSC code against your bank passbook, then update the bank details through the scholarship portal or your institute.',
+        action: {
+          type: 'create-task',
+          task: { ...taskBase, title: 'Verify your account number and IFSC against your passbook', owner: 'student' },
+        },
+      }
+    case 'payment-account-status':
+      return {
+        kind: interpretation.kind,
+        steps: [read, 'Identified a payment problem caused by the status of the bank account.'],
+        summary: 'Ask your bank to reactivate the account or complete its KYC, then ask for the payment to be retried.',
+        action: {
+          type: 'create-task',
+          task: { ...taskBase, title: 'Ask your bank to reactivate your account or complete KYC', owner: 'bank' },
+        },
+      }
+    case 'payment-unknown':
+      return {
+        kind: interpretation.kind,
+        steps: [read, 'Identified a failed payment, but the notice gives no reason.'],
+        summary:
+          'I will not guess the cause. Find the exact failure reason in the scholarship portal or the PFMS payment status.',
+        action: {
+          type: 'create-task',
+          task: { ...taskBase, title: 'Find the exact payment failure reason on the portal or PFMS', owner: 'student' },
+        },
+      }
     case 'unrecognised':
       return {
         kind: interpretation.kind,
@@ -162,9 +207,12 @@ export function planResponse(text: string, student: Student, application: Applic
 }
 
 /** Example notices offered for trying the notice reader. */
-export const sampleNotices = [
+export const exampleNotices = [
   { label: 'Returned: enrolment evidence', text: correctionNotice },
   { label: 'Incomplete: missing document', text: 'Application incomplete: income certificate not uploaded.' },
   { label: 'Payment failed: Aadhaar', text: 'Payment failed: Aadhaar not seeded in NPCI mapper for the account.' },
+  { label: 'Payment failed: bank account', text: 'Payment failed: invalid bank account number.' },
+  { label: 'Payment failed: account status', text: 'Payment failed: beneficiary account is frozen.' },
+  { label: 'Payment failed: no reason', text: 'Payment failed.' },
   { label: 'Something else', text: 'Please attend an interview on 20 November.' },
 ]

@@ -4,7 +4,7 @@ import { schemeById } from '@/data/schemes'
 import {
   NOTICE_MAX_LENGTH,
   planResponse,
-  sampleNotices,
+  exampleNotices,
   type CaseworkerPlan,
   type ProposedAction,
 } from '@/domain/caseworker'
@@ -116,11 +116,11 @@ export function Caseworker({ student, applications }: CaseworkerProps) {
         </div>
 
         <fieldset>
-          <legend className="font-bold">Try a sample notice</legend>
+          <legend className="font-bold">Try an example notice</legend>
           <div className="mt-2 flex flex-wrap gap-2">
-            {sampleNotices.map((sample) => (
-              <Button key={sample.label} variant="secondary" onClick={() => setNotice(sample.text)}>
-                {sample.label}
+            {exampleNotices.map((example) => (
+              <Button key={example.label} variant="secondary" onClick={() => setNotice(example.text)}>
+                {example.label}
               </Button>
             ))}
           </div>

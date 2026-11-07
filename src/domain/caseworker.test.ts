@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applications, correctionNotice } from '@/data/cases'
 import { renewalStudent } from '@/test/fixtures'
-import { cleanNotice, interpretNotice, NOTICE_MAX_LENGTH, planResponse, sampleNotices } from './caseworker'
+import { cleanNotice, interpretNotice, NOTICE_MAX_LENGTH, planResponse, exampleNotices } from './caseworker'
 import type { Application } from './types'
 
 const renewal = applications.find((application) => application.id === 'meera-pmusp-2026') as Application
@@ -11,6 +11,12 @@ describe('interpretNotice', () => {
     [correctionNotice, 'enrolment-evidence'],
     ['Please upload a bonafide certificate.', 'enrolment-evidence'],
     ['Payment failed: Aadhaar not seeded in NPCI mapper.', 'payment-issue'],
+    ['Payment failed: invalid bank account number.', 'payment-account-invalid'],
+    ['Payment failed: IFSC mismatch.', 'payment-account-invalid'],
+    ['Payment failed: account closed.', 'payment-account-status'],
+    ['Payment returned: KYC pending, account dormant.', 'payment-account-status'],
+    ['Payment failed.', 'payment-unknown'],
+    ['Verification failed for your interview slot.', 'unrecognised'],
     ['Please attend an interview on 20 November.', 'unrecognised'],
     ['Your application is incomplete.', 'unrecognised'],
   ])('reads "%s" as %s', (text, kind) => {
@@ -27,11 +33,14 @@ describe('interpretNotice', () => {
     expect(interpretNotice(text)).toEqual({ kind: 'missing-document', docType })
   })
 
-  it('treats every sample notice as the kind its label describes', () => {
-    expect(sampleNotices.map((notice) => interpretNotice(notice.text).kind)).toEqual([
+  it('treats every example notice as the kind its label describes', () => {
+    expect(exampleNotices.map((notice) => interpretNotice(notice.text).kind)).toEqual([
       'enrolment-evidence',
       'missing-document',
       'payment-issue',
+      'payment-account-invalid',
+      'payment-account-status',
+      'payment-unknown',
       'unrecognised',
     ])
   })
@@ -107,6 +116,32 @@ describe('planResponse', () => {
     expect(plan.steps[2]).toMatch(/not the same as the NPCI mapper/)
     expect(plan.source?.title).toBe('PFMS Aadhaar seeding guide')
     expect(plan.action).toMatchObject({ type: 'create-task', task: { owner: 'bank' } })
+  })
+
+  it('gives bank-detail advice, not NPCI advice, for an invalid account number', () => {
+    const plan = planResponse('Payment failed: invalid bank account number.', renewalStudent(), renewal)
+
+    expect(plan.kind).toBe('payment-account-invalid')
+    expect(plan.summary).toMatch(/passbook/)
+    expect(plan.action).toMatchObject({ type: 'create-task', task: { owner: 'student' } })
+    expect(plan.source).toBeUndefined()
+    expect(JSON.stringify(plan)).not.toMatch(/npci|aadhaar/i)
+  })
+
+  it('asks the bank to reactivate a closed or frozen account', () => {
+    const plan = planResponse('Payment failed: account frozen.', renewalStudent(), renewal)
+
+    expect(plan.summary).toMatch(/reactivate/)
+    expect(plan.action).toMatchObject({ type: 'create-task', task: { owner: 'bank' } })
+    expect(JSON.stringify(plan)).not.toMatch(/npci|aadhaar/i)
+  })
+
+  it('asks for the exact reason when a payment fails without one', () => {
+    const plan = planResponse('Payment failed.', renewalStudent(), renewal)
+
+    expect(plan.summary).toMatch(/exact failure reason/)
+    expect(plan.action).toMatchObject({ type: 'create-task', task: { owner: 'student' } })
+    expect(JSON.stringify(plan)).not.toMatch(/npci|aadhaar/i)
   })
 
   it('does not guess at an unrecognised notice', () => {
