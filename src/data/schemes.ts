@@ -426,6 +426,24 @@ export const nmmss: Scheme = {
   ],
   rules: [
     {
+      id: 'school-student',
+      label: 'A school student in Class IX to XII',
+      appliesTo: 'both',
+      source: sources.nmmssPib,
+      evaluate: (student) =>
+        student.level !== 'school'
+          ? notMet('This scheme is for school students in classes IX to XII, not college students.')
+          : student.schoolClass === undefined
+            ? {
+                result: 'need-info' as const,
+                reason: 'Your school class is not on record.',
+                ask: 'Which class are you in?',
+              }
+            : student.schoolClass >= 9 && student.schoolClass <= 12
+              ? met(`You are in Class ${student.schoolClass}.`)
+              : notMet('This scheme is for school students in classes IX to XII.'),
+    },
+    {
       id: 'class-9',
       label: 'In Class IX, qualified through the state or UT exam',
       appliesTo: 'fresh',

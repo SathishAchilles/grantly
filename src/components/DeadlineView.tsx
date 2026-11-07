@@ -3,7 +3,7 @@ import { formatDate } from '@/domain/dates'
 import type { StudentDeadline } from '@/domain/eligibility'
 import { SourceLink } from './SourceLink'
 
-/** The student deadline for a scheme, listing every source when they disagree so the student acts on the earliest date that has not passed and confirms it with the named contact. */
+/** The student deadline for a scheme, listing every date with its source when sources disagree, without picking one, and asking the student to confirm with the named contact. */
 export function DeadlineView({ deadline, confirmWith }: { deadline: StudentDeadline; confirmWith: string }) {
   if (deadline.status === 'none') return <p>{deadline.note}</p>
 
@@ -22,6 +22,11 @@ export function DeadlineView({ deadline, confirmWith }: { deadline: StudentDeadl
       </p>
     )
   }
+
+  const earliestOpen = deadline.options
+    .filter((option) => !option.passed)
+    .map((option) => option.date)
+    .sort()[0]
 
   return (
     <div className="rounded-[1.25rem] border-2 border-rust/70 bg-rust-soft p-4">
@@ -43,11 +48,14 @@ export function DeadlineView({ deadline, confirmWith }: { deadline: StudentDeadl
         ))}
       </ul>
       <p className="mt-3 font-bold">
-        {deadline.recommended
-          ? `Act by ${formatDate(deadline.recommended)}, the earliest date that has not passed.`
-          : 'Every listed date has passed.'}{' '}
-        Confirm with {confirmWith}.
+        Official sources disagree, so no single deadline is confirmed. Confirm the date with {confirmWith}.
       </p>
+      {earliestOpen && (
+        <p className="mt-1 text-small">
+          As a precaution only, plan to finish by {formatDate(earliestOpen)}, the earliest date listed that has not
+          passed. This is not the confirmed deadline.
+        </p>
+      )}
     </div>
   )
 }

@@ -9,7 +9,8 @@ import { StudentOnly } from '@/components/StudentOnly'
 import { schemes } from '@/data/schemes'
 import { todayIso } from '@/domain/dates'
 import { evaluateScheme, type Overall } from '@/domain/eligibility'
-import type { Scheme, Student } from '@/domain/types'
+import type { Application, Scheme, Student } from '@/domain/types'
+import { useGrantlyStore } from '@/store/useGrantlyStore'
 
 const overallLabel: Record<Overall, string> = {
   'meets-listed-conditions': 'Meets every listed condition we can check.',
@@ -49,8 +50,16 @@ function Amount({ scheme, student }: { scheme: Scheme; student: Student }) {
   )
 }
 
-function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
-  const evaluation = evaluateScheme(scheme, student, todayIso())
+function SchemeCard({
+  scheme,
+  student,
+  applications,
+}: {
+  scheme: Scheme
+  student: Student
+  applications: Application[]
+}) {
+  const evaluation = evaluateScheme(scheme, student, todayIso(), applications)
   const headingId = `scheme-${scheme.id}`
   const verdict = overallStyle[evaluation.overall]
   const VerdictIcon = verdict.icon
@@ -102,7 +111,7 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
 
       <h3 className="mt-7 flex items-center gap-2 font-extrabold">
         <FileSearch aria-hidden="true" size={20} strokeWidth={2.4} className="shrink-0 text-forest" />
-        Conditions for {student.applicantType} applicants
+        Conditions for {evaluation.applicantType} applicants
       </h3>
       <ul className="mt-3 space-y-2.5">
         {evaluation.results.map(({ rule, outcome }) => (
@@ -133,15 +142,16 @@ function SchemeCard({ scheme, student }: { scheme: Scheme; student: Student }) {
 }
 
 function Opportunities({ student }: { student: Student }) {
+  const applications = useGrantlyStore((state) => state.applications)
   return (
     <>
       <p className="mb-8 max-w-3xl rounded-card border border-hairline bg-surface px-5 py-4 shadow-soft">
-        Showing {student.name}: {student.course}, year {student.studyYear}, {student.applicantType} applicant. Domicile{' '}
-        {student.domicile.state}; studying in {student.institution.place.city}, {student.institution.place.state}.
+        Showing {student.name}: {student.course}, year {student.studyYear}. Domicile {student.domicile.state}; studying
+        in {student.institution.place.city}, {student.institution.place.state}.
       </p>
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         {schemes.map((scheme) => (
-          <SchemeCard key={scheme.id} scheme={scheme} student={student} />
+          <SchemeCard key={scheme.id} scheme={scheme} student={student} applications={applications} />
         ))}
       </div>
     </>

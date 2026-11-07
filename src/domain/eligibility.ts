@@ -1,5 +1,5 @@
 import { isPassed } from './dates'
-import type { ApplicantType, Rule, RuleOutcome, Scheme, Source, Student } from './types'
+import type { Application, ApplicantType, Rule, RuleOutcome, Scheme, Source, Student } from './types'
 
 /** A rule paired with how the student fared against it. */
 export interface RuleResult {
@@ -7,7 +7,7 @@ export interface RuleResult {
   outcome: RuleOutcome
 }
 
-/** Summary of all rule outcomes: any rule not met wins, then anything still unknown. */
+/** Summary of all rule outcomes: any rule not met wins, then anything unknown or no applicable rules at all. */
 export type Overall = 'meets-listed-conditions' | 'does-not-meet' | 'more-information-needed'
 
 /** A closing date from one source, and whether it has already passed. */
@@ -17,14 +17,16 @@ export interface DeadlineOption {
   passed: boolean
 }
 
-/** The closing date a student should work to: none published, one agreed date, or conflicting dates. */
+/** The student's closing date: none published, one agreed date, or conflicting dates left unresolved. */
 export type StudentDeadline =
   | { status: 'none'; note: string }
   | { status: 'single'; option: DeadlineOption }
-  | { status: 'conflict'; options: DeadlineOption[]; recommended: string | null }
+  | { status: 'conflict'; options: DeadlineOption[] }
 
 /** The eligibility verdict for one student against one scheme. */
 export interface SchemeEvaluation {
+  /** The applicant type used for this scheme, derived from the student's applications to it. */
+  applicantType: ApplicantType
   /** Whether the scheme accepts the student's applicant type. */
   open: boolean
   availability: string
@@ -47,11 +49,33 @@ const describeOpenFor = (openFor: ApplicantType[]) =>
   openFor.length === 2 ? 'fresh and renewal applications' : `${openFor[0]} applications only`
 
 /**
- * Works out which closing date the student should work to, flagging sources that disagree.
+ * Derives the applicant type for one scheme: renewal only when the student already has a renewal application for it.
+ *
+ * @param scheme - The scheme being evaluated.
+ * @param student - The student applying.
+ * @param applications - Applications on record, of any student or scheme.
+ * @returns "renewal" when the student has a renewal application for this scheme, otherwise "fresh".
+ */
+export function applicantTypeFor(
+  scheme: Scheme,
+  student: Student,
+  applications: readonly Application[],
+): ApplicantType {
+  const renewing = applications.some(
+    (application) =>
+      application.studentId === student.id &&
+      application.schemeId === scheme.id &&
+      application.applicantType === 'renewal',
+  )
+  return renewing ? 'renewal' : 'fresh'
+}
+
+/**
+ * Collects the student closing dates every source publishes, without choosing between them.
  *
  * @param scheme - The scheme whose published deadlines are read.
  * @param today - Today's date, as YYYY-MM-DD.
- * @returns No deadline, a single date, or a conflict with the earliest open date recommended.
+ * @returns No deadline, a single date, or a conflict listing every dated option with its source.
  */
 export function studentDeadline(scheme: Scheme, today: string): StudentDeadline {
   const options: DeadlineOption[] = scheme.deadlines.flatMap((set) =>
@@ -62,11 +86,7 @@ export function studentDeadline(scheme: Scheme, today: string): StudentDeadline 
   const [first] = options
   if (!first) return { status: 'none', note: scheme.noDeadlineNote ?? 'No closing date has been published.' }
   if (new Set(options.map((option) => option.date)).size === 1) return { status: 'single', option: first }
-  const open = options
-    .filter((option) => !option.passed)
-    .map((option) => option.date)
-    .sort()
-  return { status: 'conflict', options, recommended: open[0] ?? null }
+  return { status: 'conflict', options }
 }
 
 /**
@@ -75,26 +95,34 @@ export function studentDeadline(scheme: Scheme, today: string): StudentDeadline 
  * @param scheme - The scheme to evaluate.
  * @param student - The student being checked.
  * @param today - Today's date, as YYYY-MM-DD.
+ * @param applications - Applications on record, used to decide whether the student is renewing this scheme.
  * @returns Availability, each rule result, the overall verdict and the deadline.
  */
-export function evaluateScheme(scheme: Scheme, student: Student, today: string): SchemeEvaluation {
-  const open = scheme.openFor.includes(student.applicantType)
+export function evaluateScheme(
+  scheme: Scheme,
+  student: Student,
+  today: string,
+  applications: readonly Application[],
+): SchemeEvaluation {
+  const applicantType = applicantTypeFor(scheme, student, applications)
+  const open = scheme.openFor.includes(applicantType)
   const results = scheme.rules
-    .filter((rule) => applies(rule.appliesTo, student.applicantType))
+    .filter((rule) => applies(rule.appliesTo, applicantType))
     .map((rule) => ({ rule, outcome: rule.evaluate(student) }))
 
   const outcomes = results.map((result) => result.outcome.result)
   const overall: Overall = outcomes.includes('not-met')
     ? 'does-not-meet'
-    : outcomes.some((outcome) => outcome === 'need-info' || outcome === 'needs-confirmation')
+    : outcomes.length === 0 || outcomes.some((outcome) => outcome === 'need-info' || outcome === 'needs-confirmation')
       ? 'more-information-needed'
       : 'meets-listed-conditions'
 
   return {
+    applicantType,
     open,
     availability: open
       ? `Open for ${describeOpenFor(scheme.openFor)} in ${scheme.academicYear}.`
-      : `Open for ${describeOpenFor(scheme.openFor)} in ${scheme.academicYear}, so you cannot apply as a ${student.applicantType} applicant.`,
+      : `Open for ${describeOpenFor(scheme.openFor)} in ${scheme.academicYear}, so you cannot apply as a ${applicantType} applicant.`,
     results,
     overall,
     deadline: studentDeadline(scheme, today),
