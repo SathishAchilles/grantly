@@ -1,7 +1,7 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, type RouteObject } from 'react-router'
 import { Shell } from './Shell'
 
-export const router = createBrowserRouter([
+export const routes: RouteObject[] = [
   {
     path: '/',
     Component: Shell,
@@ -17,4 +17,6 @@ export const router = createBrowserRouter([
       { path: '*', lazy: () => import('../routes/not-found') },
     ],
   },
-])
+]
+
+export const createAppRouter = () => createBrowserRouter(routes)
