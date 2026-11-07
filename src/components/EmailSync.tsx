@@ -58,7 +58,8 @@ export function EmailSync({ student }: { student: Student }) {
         Application emails
       </h2>
       <p className="mt-1 text-small text-muted">
-        From Gmail. Bring in the latest emails about your applications and funding.
+        Simulated Gmail connection: fictional emails for this profile. Fetch them to see how application updates would
+        be read.
       </p>
 
       <Button variant="secondary" className="mt-4" onClick={fetchEmails}>

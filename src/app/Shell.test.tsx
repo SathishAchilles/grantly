@@ -29,6 +29,24 @@ describe('Shell', () => {
     )
   })
 
+  it('states in the footer that statuses are simulated and data stays in this browser', async () => {
+    renderRoute('/')
+    await screen.findByRole('heading', { level: 1 })
+
+    expect(screen.getByRole('contentinfo')).toHaveTextContent(
+      'Statuses are simulated and your data stays in this browser.',
+    )
+  })
+
+  it('describes the person switch as fictional profiles saved only in this browser', async () => {
+    renderRoute('/')
+    await screen.findByRole('heading', { level: 1 })
+
+    expect(screen.getByRole('combobox', { name: 'Viewing as' })).toHaveAccessibleDescription(
+      'These profiles are fictional. Progress is saved only in this browser.',
+    )
+  })
+
   it('makes the skip link the first focusable element, pointing at main', async () => {
     const { user } = renderRoute('/')
     await screen.findByRole('heading', { level: 1 })

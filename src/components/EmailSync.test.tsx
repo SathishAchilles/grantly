@@ -14,10 +14,13 @@ async function openPlanAs(person: string) {
 }
 
 describe('Application emails', () => {
-  it('says it brings emails in from Gmail', async () => {
+  it('says the Gmail connection is simulated and the emails are fictional', async () => {
     const { panel } = await openPlanAs('arjun')
 
-    expect(within(panel).getByText(/^From Gmail\./)).toBeInTheDocument()
+    expect(
+      within(panel).getByText(/^Simulated Gmail connection: fictional emails for this profile\./),
+    ).toBeInTheDocument()
+    expect(within(panel).queryByText(/^From Gmail/)).not.toBeInTheDocument()
     expect(within(panel).queryByRole('list', { name: 'Fetched emails' })).not.toBeInTheDocument()
   })
 

@@ -88,7 +88,8 @@ export function Shell() {
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
           <p className="flex items-center gap-2 text-small text-muted">
             <ShieldCheck aria-hidden="true" size={18} className="shrink-0 text-forest" />
-            Scheme rules, amounts and deadlines link to their official sources.
+            Scheme rules, amounts and deadlines link to their official sources. Statuses are simulated and your data
+            stays in this browser.
           </p>
           <ResetDemo />
         </div>
